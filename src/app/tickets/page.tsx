@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Crown, Zap, QrCode, Loader2, CheckCircle2, AlertCircle, ShieldCheck, MousePointer2, X, Info, ArrowRight } from 'lucide-react';
+import { Star, Crown, Zap, Loader2, CheckCircle2, AlertCircle, ShieldCheck, MousePointer2, X, Info, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 
 // Firebase Imports
@@ -15,10 +15,10 @@ import { useRouter } from 'next/navigation';
 const ALL_EVENTS = [
   { id: 'paper', name: 'Paper Presentation', isTech: true, isFlagship: true },
   { id: 'poster', name: 'Poster Presentation', isTech: true, isFlagship: true },
-  { id: 'treasure', name: 'Treasure Hunt', isTech: false, isFlagship: true },
   { id: 'reverse', name: 'Reverse Engineering', isTech: true, isFlagship: false },
   { id: 'quiz', name: 'Technical Quiz', isTech: true, isFlagship: false },
   { id: 'thesis', name: 'Thesis to Technology', isTech: true, isFlagship: false },
+  { id: 'treasure', name: 'Treasure Hunt', isTech: false, isFlagship: false },
   { id: 'cup', name: 'Cup Match Challenge', isTech: false, isFlagship: false },
   { id: 'spin', name: 'Spin with Paper', isTech: false, isFlagship: false },
   { id: 'build', name: 'Build It and Balance It', isTech: false, isFlagship: false },
@@ -44,15 +44,12 @@ export default function TicketsPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Auth & Profile Fetching
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const docRef = doc(db, 'profiles', user.uid);
         const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setProfile(docSnap.data());
-        }
+        if (docSnap.exists()) setProfile(docSnap.data());
         setLoading(false);
       } else {
         router.push('/login');
@@ -61,7 +58,6 @@ export default function TicketsPage() {
     return () => unsubscribe();
   }, [router]);
 
-  // LOGIC: Limits
   const maxFlagship = 1; 
   const maxRegular = tier === 'bronze' ? 1 : tier === 'silver' ? 2 : 20;
   const currentFlagships = selectedEvents.filter(id => ALL_EVENTS.find(e => e.id === id)?.isFlagship).length;
@@ -80,27 +76,20 @@ export default function TicketsPage() {
     }
   };
 
-  // STEP 1: OPEN POPUP ONLY
   const handleInitialAuthorize = () => {
     const formUrl = REDIRECT_MAP[`${studentType}-${tier}`].url;
-    const width = 600;
-    const height = 800;
+    const width = 600, height = 800;
     const left = window.screenX + (window.outerWidth - width) / 2;
     const top = window.screenY + (window.outerHeight - height) / 2;
-    
     window.open(formUrl, 'PaymentPortal', `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`);
     setIsModalOpen(true);
   };
 
-  // STEP 2: THE FINAL SYNC (CALLED BY MODAL BUTTON)
   const handleFinalCompletionSync = async () => {
     if (!auth.currentUser || !profile) return;
     setIsProcessing(true);
-
     try {
       const selectionNames = selectedEvents.map(id => ALL_EVENTS.find(e => e.id === id)?.name);
-
-      // 1. Sync to Google Sheets (Only now!)
       await fetch('/api/google-sheet', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -115,33 +104,26 @@ export default function TicketsPage() {
           timestamp: new Date().toLocaleString()
         }),
       });
-
-      // 2. Sync to Firebase Profile
       const userRef = doc(db, 'profiles', auth.currentUser.uid);
       await setDoc(userRef, {
         ticket_tier: tier,
         registered_events: selectionNames,
         student_type: studentType,
       }, { merge: true });
-
-      // 3. Success! Close Modal and Go to Profile
       setIsModalOpen(false);
       router.push('/users');
-
     } catch (e) {
-      alert("Verification Sync Failed. Please try clicking the button again.");
+      alert("Verification Sync Failed. Try again.");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  if (loading) return <div className="min-h-screen bg-[#020617] flex items-center justify-center font-mono text-[#ea580c]"><Loader2 className="animate-spin mr-3" /> INITIALIZING...</div>;
+  if (loading) return <div className="min-h-screen bg-[#020617] flex items-center justify-center"><Loader2 className="animate-spin text-[#ea580c]" /></div>;
 
   return (
     <div className="min-h-screen bg-[#020617] py-20 px-4 text-white font-sans overflow-x-hidden">
       <div className="max-w-5xl mx-auto">
-        
-        {/* CHECK IF ALREADY REGISTERED */}
         {profile?.registered_events?.length > 0 ? (
           <div className="text-center py-20">
              <div className="w-24 h-24 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-8 border border-green-500/20">
@@ -162,7 +144,7 @@ export default function TicketsPage() {
               </div>
             </header>
 
-            {/* IDENTIFICATION */}
+            {/* 01: IDENTIFICATION */}
             <section className="mb-12">
               <h3 className="text-slate-500 font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">01 Identification</h3>
               <div className="grid grid-cols-2 gap-4">
@@ -174,15 +156,15 @@ export default function TicketsPage() {
               </div>
             </section>
 
-            {/* CATEGORY */}
+            {/* 02: CATEGORY */}
             {studentType && (
               <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-12">
                 <h3 className="text-slate-500 font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">02 Select Category</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {[
-                    { id: 'bronze', icon: Star, name: 'Bronze', price: '₹353' },
-                    { id: 'silver', icon: Crown, name: 'Silver', price: '₹589' },
-                    { id: 'gold', icon: Zap, name: 'Gold', price: '₹825' },
+                    { id: 'bronze', icon: Star, name: 'Bronze', price: '₹299' },
+                    { id: 'silver', icon: Crown, name: 'Silver', price: '₹499' },
+                    { id: 'gold', icon: Zap, name: 'Gold', price: '₹699' },
                   ].map(t => (
                     <button key={t.id} onClick={() => {setTier(t.id as any); setSelectedEvents([]);}} className={`p-8 rounded-[36px] border-2 transition-all flex flex-col items-center gap-4 ${tier === t.id ? 'border-[#ea580c] bg-[#ea580c]/10' : 'border-white/5 bg-white/[0.02]'}`}>
                       <t.icon size={36} className={tier === t.id ? 'text-[#ea580c]' : 'text-slate-700'} />
@@ -196,7 +178,7 @@ export default function TicketsPage() {
               </motion.section>
             )}
 
-            {/* CONFIGURATION */}
+            {/* 03: CONFIGURATION */}
             {tier && (
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
                 <div className="bg-[#0b1021]/80 backdrop-blur-3xl border border-white/5 rounded-[48px] p-8 md:p-14 shadow-2xl relative">
@@ -213,18 +195,18 @@ export default function TicketsPage() {
                     )}
                   </div>
 
-                  {/* EVENT GRID */}
                   <div className="space-y-12">
                     <div>
                         <h4 className="text-[10px] font-mono text-[#ea580c] uppercase tracking-[0.5em] mb-6 flex items-center gap-3"><Star size={14} /> Compulsory Flagships</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {ALL_EVENTS.filter(e => e.isFlagship).map(f => {
                                 const isSelected = selectedEvents.includes(f.id);
                                 const isFaded = !isSelected && isLimitReached(true);
                                 return (
                                     <button key={f.id} onClick={() => handleEventToggle(f.id, true)} className={`p-6 rounded-3xl border-2 text-left transition-all ${isSelected ? 'border-[#ea580c] bg-[#ea580c]/10' : 'border-white/5 bg-black/40'} ${isFaded ? 'opacity-20 grayscale' : 'opacity-100'}`}>
                                         <span className="text-[11px] font-black uppercase text-white block mb-1">{f.name}</span>
-                                        {isSelected && <CheckCircle2 size={18} className="text-[#ea580c]" />}
+                                        <span className="text-[9px] text-cyan-400 font-mono tracking-widest uppercase">Technical</span>
+                                        {isSelected && <CheckCircle2 size={18} className="text-[#ea580c] absolute top-6 right-6" />}
                                     </button>
                                 );
                             })}
@@ -238,7 +220,10 @@ export default function TicketsPage() {
                                 const isFaded = !isSelected && isLimitReached(false);
                                 return (
                                     <button key={e.id} onClick={() => handleEventToggle(e.id, false)} className={`p-6 rounded-2xl border-2 text-left flex justify-between items-center transition-all ${isSelected ? 'border-[#ea580c] bg-[#ea580c]/10' : 'border-white/5 bg-black/40'} ${isFaded ? 'opacity-20 grayscale' : 'opacity-100'}`}>
-                                        <span className="text-[12px] font-bold text-white">{e.name}</span>
+                                        <div>
+                                          <span className="text-[12px] font-bold text-white block mb-1">{e.name}</span>
+                                          <span className={`text-[8px] font-mono tracking-widest uppercase ${e.isTech ? 'text-cyan-400' : 'text-amber-500'}`}>{e.isTech ? 'Technical' : 'Non-Technical'}</span>
+                                        </div>
                                         {isSelected && <CheckCircle2 size={18} className="text-[#ea580c]" />}
                                     </button>
                                 );
@@ -255,7 +240,7 @@ export default function TicketsPage() {
                   <button 
                     disabled={selectedEvents.length === 0 || currentFlagships === 0}
                     onClick={handleInitialAuthorize}
-                    className="w-full py-7 rounded-[32px] bg-[#ea580c] font-black uppercase tracking-[0.4em] text-xs shadow-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-20"
+                    className="w-full py-7 rounded-[32px] bg-[#ea580c] font-black uppercase tracking-[0.4em] text-xs shadow-[0_20px_40px_rgba(234,88,12,0.3)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-20"
                   >
                     Deploy Authorized Access
                   </button>
@@ -265,32 +250,48 @@ export default function TicketsPage() {
           </>
         )}
 
-        {/* MODAL: THE FINAL VERIFICATION STEP */}
+        {/* MODAL: SYNC IN PROGRESS (EXACT STYLING RESTORED) */}
         <AnimatePresence>
           {isModalOpen && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4">
-              <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="relative w-full max-w-2xl bg-white rounded-[40px] p-10 text-center text-black">
-                <div className="w-20 h-20 rounded-full bg-[#ea580c]/10 flex items-center justify-center mx-auto mb-6">
-                   <Zap size={32} className="text-[#ea580c] fill-[#ea580c]" />
+              <motion.div 
+                initial={{ scale: 0.9, y: 20 }} 
+                animate={{ scale: 1, y: 0 }} 
+                className="relative w-full max-w-2xl bg-white rounded-[64px] p-12 text-center text-black shadow-3xl overflow-hidden"
+              >
+                {/* Bolt Icon Header */}
+                <div className="w-24 h-24 rounded-full bg-[#ea580c]/10 flex items-center justify-center mx-auto mb-10">
+                   <Zap size={40} className="text-[#ea580c] fill-[#ea580c]" />
                 </div>
-                <h3 className="text-3xl font-black uppercase tracking-tighter mb-4 italic">Sync <span className="text-[#ea580c]">In Progress</span></h3>
-                <p className="text-sm font-medium text-slate-600 mb-8 max-w-sm mx-auto leading-relaxed">A separate payment window has been opened. Complete the form and upload your screenshot there first.</p>
 
-                <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 text-left mb-8">
-                   <h4 className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2"><Info size={14} /> Mission Briefing</h4>
-                   <ul className="text-[11px] font-bold text-slate-700 space-y-2 uppercase leading-tight">
-                      <li>• DO NOT close this site yet.</li>
-                      <li>• Upload your payment screenshot in the popup form.</li>
-                      <li>• Once the form says "Submitted", click the button below.</li>
+                {/* Main Heading */}
+                <h3 className="text-4xl font-black uppercase tracking-tighter mb-4 italic leading-none">
+                  SYNC <span className="text-[#ea580c]">IN PROGRESS</span>
+                </h3>
+                
+                <p className="text-sm font-medium text-slate-500 mb-10 max-w-sm mx-auto leading-relaxed">
+                  A separate payment window has been opened. Complete the form and upload your screenshot there first.
+                </p>
+
+                {/* Briefing Box */}
+                <div className="p-8 bg-[#f8f9fc] rounded-[40px] border border-slate-100 text-left mb-10">
+                   <h4 className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+                      <Info size={16} /> MISSION BRIEFING
+                   </h4>
+                   <ul className="text-[11px] font-black text-slate-700 space-y-3 uppercase leading-tight">
+                      <li className="flex items-start gap-2">• <span>DO NOT CLOSE THIS SITE YET.</span></li>
+                      <li className="flex items-start gap-2">• <span>UPLOAD YOUR PAYMENT SCREENSHOT IN THE POPUP FORM.</span></li>
+                      <li className="flex items-start gap-2">• <span>ONCE THE FORM SAYS "SUBMITTED", CLICK THE BUTTON BELOW.</span></li>
                    </ul>
                 </div>
 
+                {/* Pill Button */}
                 <button 
                   disabled={isProcessing}
                   onClick={handleFinalCompletionSync}
-                  className="w-full py-6 bg-black text-white rounded-full font-black text-[10px] tracking-[0.3em] hover:bg-[#ea580c] transition-all uppercase shadow-xl"
+                  className="w-full py-7 bg-black text-white rounded-full font-black text-[10px] tracking-[0.4em] hover:bg-[#ea580c] transition-all uppercase shadow-2xl active:scale-95 disabled:opacity-50"
                 >
-                  {isProcessing ? <Loader2 className="animate-spin mx-auto" /> : "I Have Completed Registration"}
+                  {isProcessing ? <Loader2 className="animate-spin mx-auto" /> : "I HAVE COMPLETED REGISTRATION"}
                 </button>
               </motion.div>
             </motion.div>

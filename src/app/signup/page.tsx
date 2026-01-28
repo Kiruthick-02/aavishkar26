@@ -103,7 +103,7 @@ export default function SignupPage() {
         <form className="space-y-5" onSubmit={handleSignup}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono tracking-widest text-slate-400 uppercase ml-1">Given Name</label>
+              <label className="text-[10px] font-mono tracking-widest text-slate-400 uppercase ml-1">First Name</label>
               <input
                 type="text"
                 required
@@ -113,7 +113,7 @@ export default function SignupPage() {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-mono tracking-widest text-slate-400 uppercase ml-1">Family Name</label>
+              <label className="text-[10px] font-mono tracking-widest text-slate-400 uppercase ml-1">Last Name</label>
               <input
                 type="text"
                 required
@@ -136,7 +136,7 @@ export default function SignupPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-[10px] font-mono tracking-widest text-slate-400 uppercase ml-1">Institute Affiliation</label>
+            <label className="text-[10px] font-mono tracking-widest text-slate-400 uppercase ml-1">College Name</label>
             <input
               type="text"
               required

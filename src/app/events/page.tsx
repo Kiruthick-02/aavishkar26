@@ -465,7 +465,7 @@ export default function EventsPage() {
               },
               {
                 tier: "TIER 1 – Gold",
-                price: "₹799 + 18% GST",
+                price: "₹699 + 18% GST",
                 details: ["Access to ALL events", "All Flagship events included"],
                 color: "border-[#ea580c]/30 bg-[#ea580c]/5",
               },

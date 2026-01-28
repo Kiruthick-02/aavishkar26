@@ -1,9 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone", // ✅ enable static export for Firebase Hosting
+  output: "standalone", // Required for Docker/Hugging Face
+  productionBrowserSourceMaps: false, // Reduces memory usage significantly
   images: {
-    unoptimized: true,
+    unoptimized: true, // Required if 'sharp' is not installed in Docker
     remotePatterns: [
       {
         protocol: "https",
@@ -16,6 +17,11 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+  },
+  // Memory management for build time
+  experimental: {
+    workerThreads: false, 
+    cpus: 1
   },
 };
 

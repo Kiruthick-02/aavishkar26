@@ -1,26 +1,25 @@
-# Use Node.js 20 (LTS) instead of 18
+# Use Node.js 20 (LTS)
 FROM node:20-alpine AS base
 
-# Install dependencies only when needed
+# 1. Install dependencies stage
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Rebuild the source code only when needed
+# 2. Rebuild the source code stage
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Disable telemetry during build
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Standard build command
-RUN npm run build
+# Increase memory limit specifically for the build command
+RUN NODE_OPTIONS='--max-old-space-size=1536' npm run build
 
-# Production image, copy all the files and run next
+# 3. Production runner stage
 FROM base AS runner
 WORKDIR /app
 
@@ -30,13 +29,8 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Copy essential files
 COPY --from=builder /app/public ./public
-
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
@@ -46,4 +40,6 @@ EXPOSE 7860
 ENV PORT 7860
 ENV HOSTNAME "0.0.0.0"
 
-CMD ["node", "server.js"]
+# CRITICAL: Limit memory usage to 1.5GB to leave room for the OS within the 2GB HF limit
+# This prevents Error 137
+CMD ["node", "--max-old-space-size=1536", "server.js"]

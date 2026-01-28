@@ -1,3 +1,15 @@
+---
+title: Aavishkar26
+emoji: 🚀
+colorFrom: orange
+colorTo: blue
+sdk: docker
+pinned: false
+---
+
+# Aavishkar 2026
+This is the official event registration platform for Aavishkar'26.
+
 <<<<<<< HEAD
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 

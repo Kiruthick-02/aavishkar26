@@ -86,7 +86,7 @@ const TECH_EVENTS = [
     is_technical: true, 
     is_flagship: false, 
     contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=2670&auto=format&fit=crop',
+    image_url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2670&auto=format&fit=crop',
     themes: [
       'Sustainable & Green Chemical Engineering',
       'Energy & Thermal Engineering Technologies',
@@ -275,7 +275,7 @@ const NON_TECH_EVENTS = [
     is_technical: false,
     is_flagship: false,
     contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1515966097209-ec48fdbbd004?q=80&w=2670&auto=format&fit=crop',
+    image_url: 'https://images.unsplash.com/photo-1608111283390-2e333b9b279c?q=80&w=2670&auto=format&fit=crop',
     sections: [
       { title: "Day 1 Details", items: ["Time: After Inauguration", "Entry Fee: ₹10"] }
     ]
@@ -289,7 +289,7 @@ const NON_TECH_EVENTS = [
     is_technical: false,
     is_flagship: false,
     contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1606092195730-5d7b9af1ef4d?q=80&w=2670&auto=format&fit=crop',
+    image_url: 'https://images.unsplash.com/photo-1620330541783-c21532f1469e?q=80&w=2670&auto=format&fit=crop',
     sections: [
       { title: "Day 2 Details", items: ["Time: Morning to 1 PM", "Entry Fee: ₹10"] },
       { title: "Golden Ticket Offer", content: "Access all 5 Day-2 games for ₹45" }
@@ -338,7 +338,7 @@ const NON_TECH_EVENTS = [
     is_technical: false,
     is_flagship: false,
     contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1516280440614-6697288d5d38?q=80&w=2670&auto=format&fit=crop',
+    image_url: 'https://images.unsplash.com/photo-1598387181032-a3103a2db5b3?q=80&w=2670&auto=format&fit=crop',
     sections: [
       { title: "Day 2 Details", items: ["Time: Morning to 1 PM", "Entry Fee: ₹10"] }
     ]

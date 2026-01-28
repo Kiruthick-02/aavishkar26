@@ -14,7 +14,7 @@ import { Facebook, Twitter, Instagram, Linkedin, Youtube, MapPin, ArrowUpRight, 
  */
 
 const Footer = () => {
-  const campusIllustration = "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/test-clones/5cb9fc4f-6bef-4623-93a4-7e129d421775-anokha-amrita-edu/assets/images/images_21.png";
+  const campusIllustration = "/images/logo-gold.png";
 
   return (
     <footer className="relative bg-black text-white overflow-hidden pt-12 pb-8">
@@ -74,21 +74,12 @@ const Footer = () => {
               <div className="space-y-4">
                 <h3 className="font-mono text-xs font-bold uppercase tracking-widest text-[#22d3ee]">FOLLOW US</h3>
                 <div className="flex items-center gap-4">
-                  <a href="#" className="text-slate-400 hover:text-[#d4af37] transition-colors duration-300 transform hover:scale-110">
-                    <Facebook className="w-5 h-5" />
-                  </a>
-                  <a href="#" className="text-slate-400 hover:text-[#d4af37] transition-colors duration-300 transform hover:scale-110">
-                    <Twitter className="w-5 h-5" />
-                  </a>
-                  <a href="#" className="text-slate-400 hover:text-[#d4af37] transition-colors duration-300 transform hover:scale-110">
+                  
+                  
+                  <a href="https://www.instagram.com/aavishkar_2026?igsh=dndnZmJhcTRmb2px" className="text-slate-400 hover:text-[#d4af37] transition-colors duration-300 transform hover:scale-110">
                     <Instagram className="w-5 h-5" />
                   </a>
-                  <a href="#" className="text-slate-400 hover:text-[#d4af37] transition-colors duration-300 transform hover:scale-110">
-                    <Linkedin className="w-5 h-5" />
-                  </a>
-                  <a href="#" className="text-slate-400 hover:text-[#d4af37] transition-colors duration-300 transform hover:scale-110">
-                    <Youtube className="w-5 h-5" />
-                  </a>
+                  
                 </div>
                 <a 
                   href="https://www.cit.edu.in/" 
@@ -103,8 +94,8 @@ const Footer = () => {
               {/* Quick Links */}
               <div className="space-y-3">
                 <a href="/" className="block text-sm font-medium text-white hover:text-[#22d3ee] transition-colors tracking-wide uppercase">HOME</a>
-                <a href="/team" className="block text-sm font-medium text-white hover:text-[#22d3ee] transition-colors tracking-wide uppercase">TEAM</a>
-                <a href="/terms" className="block text-sm font-medium text-white hover:text-[#22d3ee] transition-colors tracking-wide uppercase">TERMS & CONDITIONS</a>
+                <a href="/team" className="block text-sm font-medium text-white hover:text-[#22d3ee] transition-colors tracking-wide uppercase"></a>
+                <a href="/terms" className="block text-sm font-medium text-white hover:text-[#22d3ee] transition-colors tracking-wide uppercase"></a>
               </div>
             </div>
           </div>

@@ -74,7 +74,7 @@ const AboutAavishkar = () => {
 
               {/* Header */}
               <div className="mb-8">
-                <span className="text-hud mb-2 block font-mono text-cyan-400">DATA_CORE: ARCHIVE_01</span>
+                <span className="text-hud mb-2 block font-mono text-cyan-400">DATA_CORE: </span>
                 <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white font-display">
                   About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-white to-gold-metallic">aavishkar</span>
                 </h2>

@@ -175,24 +175,98 @@ export default function TicketsPage() {
               </div>
             </section>
 
-            {/* CATEGORY */}
-            {studentType && (
-              <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-12">
-                <h3 className="text-slate-500 font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">02 Select Category</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {[
-                    { id: "bronze", icon: Star, name: "Bronze" },
-                    { id: "silver", icon: Crown, name: "Silver" },
-                    { id: "gold", icon: Zap, name: "Gold" },
-                  ].map((t) => (
-                    <button key={t.id} onClick={() => handleTierSelection(t.id as any)} className={`p-8 rounded-[36px] border-2 transition-all flex flex-col items-center gap-4 ${tier === t.id ? "border-[#ea580c] bg-[#ea580c]/10" : "border-white/5 bg-white/[0.02]"}`}>
-                      <t.icon size={36} className={tier === t.id ? "text-[#ea580c]" : "text-slate-700"} />
-                      <span className="font-black uppercase tracking-[0.3em] text-[11px] block">{t.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </motion.section>
-            )}
+            {/* 02: CATEGORY */}
+{studentType && (
+<motion.section
+initial={{ opacity: 0 }}
+animate={{ opacity: 1 }}
+className="mb-12"
+>
+<h3 className="text-slate-500 font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">
+  02 Select Category
+</h3>
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  {[
+    {
+      id: "bronze",
+      icon: Star,
+      name: "Bronze",
+      prices: {
+        cit: "₹299 (No GST)",
+        other: "₹353 (Incl. GST)",
+      },
+    },
+    {
+      id: "silver",
+      icon: Crown,
+      name: "Silver",
+      prices: {
+        cit: "₹499 (No GST)",
+        other: "₹589 (Incl. GST)",
+      },
+    },
+    {
+      id: "gold",
+      icon: Zap,
+      name: "Gold",
+      prices: {
+        cit: "₹699 (No GST)",
+        other: "₹825 (Incl. GST)",
+      },
+    },
+  ].map((t) => {
+    const price =
+      studentType === "cit" ? t.prices.cit : t.prices.other;
+
+    return (
+      <button
+        key={t.id}
+        onClick={() => {
+          setTier(t.id as any);
+          setSelectedEvents([]);
+        }}
+        className={`p-8 rounded-[36px] border-2 transition-all flex flex-col items-center gap-4 ${
+          tier === t.id
+            ? "border-[#ea580c] bg-[#ea580c]/10"
+            : "border-white/5 bg-white/2"
+        }`}
+      >
+        <t.icon
+          size={36}
+          className={
+            tier === t.id ? "text-[#ea580c]" : "text-slate-700"
+          }
+        />
+
+        <div className="text-center">
+          <span className="font-black uppercase tracking-[0.3em] text-[11px] block">
+            {t.name}
+          </span>
+
+          {/* Animated Price */}
+          <div className="relative h-10 mt-1 overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={`${studentType}-${t.id}`}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="absolute inset-0 text-[10px] font-mono text-slate-500 block"
+              >
+                {price}
+              </motion.span>
+            </AnimatePresence>
+          </div>
+        </div>
+      </button>
+    );
+  })}
+</div>
+</motion.section>
+)}
+
 
             {/* CONFIGURATION */}
             {tier && (

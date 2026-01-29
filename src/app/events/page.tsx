@@ -183,104 +183,7 @@ const TECH_EVENTS = [
 // --- NON-TECH EVENTS (DAY 1 & DAY 2) ---
 const NON_TECH_EVENTS = [
   // --- DAY 1 EVENTS ---
-  {
-    id: 'nt-triangle-rush',
-    name: 'Triangle Rush',
-    description: 'An exhilarating agility game where speed meets precision. Race against time to collect bottles arranged in a pattern.',
-    is_technical: false,
-    is_flagship: false,
-    contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=2670&auto=format&fit=crop',
-    sections: [
-      { title: "Day 1 Details", items: ["Time: After Inauguration (Till Evening)", "Entry Fee: ₹10"] },
-      { title: "Golden Ticket Offer", content: "Access all 8 Day-1 games for ₹75" }
-    ]
-  },
-  {
-    id: 'nt-flip-catch',
-    name: 'Flip and Catch',
-    description: 'A classic test of hand-eye coordination. Flip the cups and catch them in rhythm to win.',
-    is_technical: false,
-    is_flagship: false,
-    contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1525207934214-58e69a8f8a3e?q=80&w=2670&auto=format&fit=crop',
-    sections: [
-      { title: "Day 1 Details", items: ["Time: After Inauguration", "Entry Fee: ₹10"] }
-    ]
-  },
-  {
-    id: 'nt-colour-confusion',
-    name: 'Colour Confusion',
-    description: 'Challenge your brain! A reaction-time game designed to test your focus under pressure.',
-    is_technical: false,
-    is_flagship: false,
-    contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1502691876148-a84978e59af8?q=80&w=2670&auto=format&fit=crop',
-    sections: [
-      { title: "Day 1 Details", items: ["Time: After Inauguration", "Entry Fee: ₹10"] }
-    ]
-  },
-  {
-    id: 'nt-typing-sprint',
-    name: 'Typing Sprint',
-    description: 'Are you the fastest fingers first? Prove your typing speed and accuracy in this digital sprint.',
-    is_technical: false,
-    is_flagship: false,
-    contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=2670&auto=format&fit=crop',
-    sections: [
-      { title: "Day 1 Details", items: ["Time: After Inauguration", "Entry Fee: ₹10"] }
-    ]
-  },
-  {
-    id: 'nt-drip-drop',
-    name: 'Drip Drop Fill',
-    description: 'A steady hand wins the game. Transfer water with extreme precision without spilling a drop.',
-    is_technical: false,
-    is_flagship: false,
-    contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1533591380348-14193f1de18f?q=80&w=2670&auto=format&fit=crop',
-    sections: [
-      { title: "Day 1 Details", items: ["Time: After Inauguration", "Entry Fee: ₹15"] }
-    ]
-  },
-  {
-    id: 'nt-snap-it',
-    name: 'Snap It',
-    description: 'Capture the moment! A theme-based photography event for the creative souls.',
-    is_technical: false,
-    is_flagship: false,
-    contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=2670&auto=format&fit=crop',
-    sections: [
-      { title: "Day 1 Details", items: ["Time: After Inauguration", "Entry Fee: ₹15"] }
-    ]
-  },
-  {
-    id: 'nt-flash-pen',
-    name: 'Flash and Pen',
-    description: 'Test your memory and observation skills. Look, remember, and write it down before time runs out.',
-    is_technical: false,
-    is_flagship: false,
-    contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=2573&auto=format&fit=crop',
-    sections: [
-      { title: "Day 1 Details", items: ["Time: After Inauguration", "Entry Fee: ₹10"] }
-    ]
-  },
-  {
-    id: 'nt-hoop-hop',
-    name: 'Hoop Hop Showdown',
-    description: 'A fun physical coordination game with a classic Stone-Paper-Scissors twist.',
-    is_technical: false,
-    is_flagship: false,
-    contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1608111283390-2e333b9b279c?q=80&w=2670&auto=format&fit=crop',
-    sections: [
-      { title: "Day 1 Details", items: ["Time: After Inauguration", "Entry Fee: ₹10"] }
-    ]
-  },
-
+  
   // --- DAY 2 EVENTS ---
   {
     id: 'nt-cup-match',
@@ -324,7 +227,7 @@ const NON_TECH_EVENTS = [
     name: 'Treasure Hunt Game',
     description: 'The ultimate adventure. Solve cryptic clues, navigate the campus, and locate the hidden treasure.',
     is_technical: false,
-    is_flagship: false,
+    is_flagship: true,
     contacts: GENERAL_CONTACTS,
     image_url: 'https://images.unsplash.com/photo-1553481187-be93c21490a9?q=80&w=2670&auto=format&fit=crop',
     sections: [
@@ -341,19 +244,6 @@ const NON_TECH_EVENTS = [
     image_url: 'https://images.unsplash.com/photo-1598387181032-a3103a2db5b3?q=80&w=2670&auto=format&fit=crop',
     sections: [
       { title: "Day 2 Details", items: ["Time: Morning to 1 PM", "Entry Fee: ₹10"] }
-    ]
-  },
-  {
-    id: 'nt-ipl-auction',
-    name: 'IPL Auction',
-    description: 'The Mega Event! A strategic simulation where you bid for players to build the ultimate cricket team.',
-    is_technical: false,
-    is_flagship: false, // Marking as flagship due to size/importance
-    contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=2670&auto=format&fit=crop',
-    sections: [
-      { title: "Event Details", items: ["Time: 12 PM to 1 PM", "Entry Fee: ₹250 (Per Team)", "Team Size: 6 Members"] },
-      { title: "Prize Pool", items: ["1st Prize: ₹1500", "2nd Prize: ₹1000", "3rd Prize: ₹500"] }
     ]
   },
 ];
@@ -450,45 +340,69 @@ export default function EventsPage() {
           </motion.button>
            {/* ================= TIER INFORMATION CARDS ================= */}
           <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
-            {[
-              {
-                tier: "TIER 3 – Bronze",
-                price: "₹299 + 18% GST",
-                details: ["Select any 2 events", "1 Flagship event (Default)"],
-                color: "border-amber-500/30 bg-amber-500/5",
-              },
-              {
-                tier: "TIER 2 – Silver",
-                price: "₹499 + 18% GST",
-                details: ["Select any 3 events", "1 Flagship event (Default)"],
-                color: "border-slate-400/30 bg-slate-400/5",
-              },
-              {
-                tier: "TIER 1 – Gold",
-                price: "₹699 + 18% GST",
-                details: ["Access to ALL events", "All Flagship events included"],
-                color: "border-[#ea580c]/30 bg-[#ea580c]/5",
-              },
-            ].map((item, idx) => (
-              <motion.div 
-                key={idx} 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + (idx * 0.1) }}
-                className={`p-8 rounded-[32px] border ${item.color} backdrop-blur-xl text-center group hover:border-[#EAB308] transition-all duration-500`}
-              >
-                <h3 className="text-white font-black mb-3 font-display uppercase tracking-widest text-xs opacity-60">{item.tier}</h3>
-                <p className="text-[#EAB308] font-black text-3xl mb-6 font-display">{item.price}</p>
-                <ul className="text-slate-400 text-xs space-y-3 text-left w-full border-t border-white/10 pt-6 font-mono uppercase tracking-wider">
-                  {item.details.map((d, i) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <CheckCircle2 size={14} className="text-[#EAB308] shrink-0" /> {d}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
+  {[
+    {
+      tier: "TIER 3 – Bronze",
+      prices: { other: "₹353 incl. GST", cit: "₹299 (No GST)" },
+      details: [
+        "2 Tech + 2 Non-Tech",
+        "Includes 1 Tech & 1 Non-Tech Flagship",
+      ],
+      color: "border-amber-500/30 bg-amber-500/5",
+    },
+    {
+      tier: "TIER 2 – Silver",
+      prices: { other: "₹589 incl. GST", cit: "₹499 (No GST)" },
+      details: [
+        "3 Tech + 3 Non-Tech",
+        "Includes 1 Tech & 1 Non-Tech Flagship",
+      ],
+      color: "border-slate-400/30 bg-slate-400/5",
+    },
+    {
+      tier: "TIER 1 – Gold",
+      prices: { other: "₹825 incl. GST", cit: "₹699 (No GST)" },
+      details: [
+        "All 5 Tech + 5 Non-Tech",
+        "All Flagship events included",
+      ],
+      color: "border-[#ea580c]/30 bg-[#ea580c]/5",
+    },
+  ].map((item, idx) => (
+    <motion.div
+      key={idx}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2 + idx * 0.1 }}
+      className={`p-8 rounded-[32px] border ${item.color} backdrop-blur-xl text-center group hover:border-[#EAB308] transition-all duration-500`}
+    >
+      <h3 className="text-white font-black mb-3 font-display uppercase tracking-widest text-xs opacity-60">
+        {item.tier}
+      </h3>
+
+      {/* Prices */}
+      <div className="mb-6 space-y-1">
+        <p className="text-[#EAB308] font-black text-3xl font-display">
+          {item.prices.other}
+        </p>
+        <p className="text-slate-400 text-xs uppercase tracking-wider font-mono">
+          CIT: {item.prices.cit}
+        </p>
+      </div>
+
+      {/* Details */}
+      <ul className="text-slate-400 text-xs space-y-3 text-left w-full border-t border-white/10 pt-6 font-mono uppercase tracking-wider">
+        {item.details.map((d, i) => (
+          <li key={i} className="flex items-center gap-2">
+            <CheckCircle2 size={14} className="text-[#EAB308] shrink-0" />
+            {d}
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  ))}
+</div>
+
        
 
 

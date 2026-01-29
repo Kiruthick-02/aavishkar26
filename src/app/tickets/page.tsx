@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Crown, Zap, Loader2, CheckCircle2, AlertCircle, ShieldCheck, MousePointer2, X, Info, ArrowRight } from 'lucide-react';
-import Image from 'next/image';
+import { Star, Crown, Zap, Loader2, CheckCircle2, AlertCircle, ShieldCheck, MousePointer2, Info, ArrowRight, Lock } from 'lucide-react';
 
 // Firebase Imports
 import { auth, db } from '@/lib/firebase';
@@ -15,10 +14,10 @@ import { useRouter } from 'next/navigation';
 const ALL_EVENTS = [
   { id: 'paper', name: 'Paper Presentation', isTech: true, isFlagship: true },
   { id: 'poster', name: 'Poster Presentation', isTech: true, isFlagship: true },
+  { id: 'treasure', name: 'Treasure Hunt', isTech: false, isFlagship: true },
   { id: 'reverse', name: 'Reverse Engineering', isTech: true, isFlagship: false },
   { id: 'quiz', name: 'Technical Quiz', isTech: true, isFlagship: false },
   { id: 'thesis', name: 'Thesis to Technology', isTech: true, isFlagship: false },
-  { id: 'treasure', name: 'Treasure Hunt', isTech: false, isFlagship: false },
   { id: 'cup', name: 'Cup Match Challenge', isTech: false, isFlagship: false },
   { id: 'spin', name: 'Spin with Paper', isTech: false, isFlagship: false },
   { id: 'build', name: 'Build It and Balance It', isTech: false, isFlagship: false },
@@ -58,22 +57,49 @@ export default function TicketsPage() {
     return () => unsubscribe();
   }, [router]);
 
-  const maxFlagship = 1; 
-  const maxRegular = tier === 'bronze' ? 1 : tier === 'silver' ? 2 : 20;
-  const currentFlagships = selectedEvents.filter(id => ALL_EVENTS.find(e => e.id === id)?.isFlagship).length;
-  const currentRegulars = selectedEvents.filter(id => ALL_EVENTS.find(e => e.id === id && !e.isFlagship)).length;
-
-  const isLimitReached = (isFlagship: boolean) => {
-    if (tier === 'gold') return false;
-    return isFlagship ? currentFlagships >= maxFlagship : currentRegulars >= maxRegular;
+  // Tier Limits
+  const limits = { 
+    bronze: { tech: 2, nonTech: 2 }, 
+    silver: { tech: 3, nonTech: 3 }, 
+    gold: { tech: 5, nonTech: 5 } 
   };
 
-  const handleEventToggle = (id: string, isFlagship: boolean) => {
-    if (selectedEvents.includes(id)) {
-      setSelectedEvents(prev => prev.filter(e => e !== id));
-    } else if (!isLimitReached(isFlagship)) {
-      setSelectedEvents(prev => [...prev, id]);
+  const currentTech = selectedEvents.filter(id => ALL_EVENTS.find(e => e.id === id)?.isTech).length;
+  const currentNonTech = selectedEvents.filter(id => ALL_EVENTS.find(e => e.id === id)?.isTech === false).length;
+  const hasTechFlagship = selectedEvents.some(id => id === 'paper' || id === 'poster');
+
+  const handleTierSelection = (selectedTier: 'gold' | 'silver' | 'bronze') => {
+    setTier(selectedTier);
+    if (selectedTier === 'gold') {
+      setSelectedEvents(ALL_EVENTS.map(e => e.id));
+    } else {
+      setSelectedEvents(['treasure']); // Locked Non-Tech Flagship
     }
+  };
+
+  const handleEventToggle = (id: string) => {
+    if (tier === 'gold' || id === 'treasure') return;
+    const event = ALL_EVENTS.find(e => e.id === id)!;
+    const isSelected = selectedEvents.includes(id);
+
+    if (isSelected) {
+      setSelectedEvents(prev => prev.filter(eid => eid !== id));
+    } else {
+      // Rule: Only 1 Tech Flagship for Bronze/Silver
+      if (event.isFlagship && event.isTech && hasTechFlagship) return;
+
+      if (event.isTech && currentTech < limits[tier!].tech) {
+        setSelectedEvents(prev => [...prev, id]);
+      } else if (!event.isTech && currentNonTech < limits[tier!].nonTech) {
+        setSelectedEvents(prev => [...prev, id]);
+      }
+    }
+  };
+
+  const isDeployReady = () => {
+    if (!tier) return false;
+    if (tier === 'gold') return true;
+    return currentTech === limits[tier].tech && currentNonTech === limits[tier].nonTech && hasTechFlagship;
   };
 
   const handleInitialAuthorize = () => {
@@ -112,11 +138,7 @@ export default function TicketsPage() {
       }, { merge: true });
       setIsModalOpen(false);
       router.push('/users');
-    } catch (e) {
-      alert("Verification Sync Failed. Try again.");
-    } finally {
-      setIsProcessing(false);
-    }
+    } catch (e) { alert("Sync Failed. Try again."); } finally { setIsProcessing(false); }
   };
 
   if (loading) return <div className="min-h-screen bg-[#020617] flex items-center justify-center"><Loader2 className="animate-spin text-[#ea580c]" /></div>;
@@ -130,10 +152,7 @@ export default function TicketsPage() {
                 <CheckCircle2 size={48} className="text-green-500" />
              </div>
              <h1 className="text-4xl font-black uppercase mb-4 italic">Protocol <span className="text-[#ea580c]">Active</span></h1>
-             <p className="text-slate-400 mb-10 max-w-md mx-auto">You have already registered for events. Your access pass is active in your Identity Core.</p>
-             <button onClick={() => router.push('/users')} className="px-10 py-4 bg-[#ea580c] rounded-full font-bold text-xs tracking-widest flex items-center gap-2 mx-auto">
-               VIEW IDENTITY CORE <ArrowRight size={16} />
-             </button>
+             <button onClick={() => router.push('/users')} className="px-10 py-4 bg-[#ea580c] rounded-full font-bold text-xs tracking-widest flex items-center gap-2 mx-auto uppercase">VIEW IDENTITY CORE <ArrowRight size={16} /></button>
           </div>
         ) : (
           <>
@@ -144,7 +163,7 @@ export default function TicketsPage() {
               </div>
             </header>
 
-            {/* 01: IDENTIFICATION */}
+            {/* IDENTIFICATION */}
             <section className="mb-12">
               <h3 className="text-slate-500 font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">01 Identification</h3>
               <div className="grid grid-cols-2 gap-4">
@@ -156,29 +175,26 @@ export default function TicketsPage() {
               </div>
             </section>
 
-            {/* 02: CATEGORY */}
+            {/* CATEGORY */}
             {studentType && (
               <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-12">
                 <h3 className="text-slate-500 font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">02 Select Category</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {[
-                    { id: 'bronze', icon: Star, name: 'Bronze', price: '₹299' },
-                    { id: 'silver', icon: Crown, name: 'Silver', price: '₹499' },
-                    { id: 'gold', icon: Zap, name: 'Gold', price: '₹699' },
-                  ].map(t => (
-                    <button key={t.id} onClick={() => {setTier(t.id as any); setSelectedEvents([]);}} className={`p-8 rounded-[36px] border-2 transition-all flex flex-col items-center gap-4 ${tier === t.id ? 'border-[#ea580c] bg-[#ea580c]/10' : 'border-white/5 bg-white/[0.02]'}`}>
-                      <t.icon size={36} className={tier === t.id ? 'text-[#ea580c]' : 'text-slate-700'} />
-                      <div className="text-center">
-                        <span className="font-black uppercase tracking-[0.3em] text-[11px] block">{t.name}</span>
-                        <span className="text-[10px] font-mono text-slate-500 mt-1 block">{t.price} (Incl. GST)</span>
-                      </div>
+                    { id: "bronze", icon: Star, name: "Bronze" },
+                    { id: "silver", icon: Crown, name: "Silver" },
+                    { id: "gold", icon: Zap, name: "Gold" },
+                  ].map((t) => (
+                    <button key={t.id} onClick={() => handleTierSelection(t.id as any)} className={`p-8 rounded-[36px] border-2 transition-all flex flex-col items-center gap-4 ${tier === t.id ? "border-[#ea580c] bg-[#ea580c]/10" : "border-white/5 bg-white/[0.02]"}`}>
+                      <t.icon size={36} className={tier === t.id ? "text-[#ea580c]" : "text-slate-700"} />
+                      <span className="font-black uppercase tracking-[0.3em] text-[11px] block">{t.name}</span>
                     </button>
                   ))}
                 </div>
               </motion.section>
             )}
 
-            {/* 03: CONFIGURATION */}
+            {/* CONFIGURATION */}
             {tier && (
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
                 <div className="bg-[#0b1021]/80 backdrop-blur-3xl border border-white/5 rounded-[48px] p-8 md:p-14 shadow-2xl relative">
@@ -189,39 +205,48 @@ export default function TicketsPage() {
                     </div>
                     {tier !== 'gold' && (
                       <div className="flex gap-4">
-                        <div className="px-4 py-2 rounded-xl bg-white/5 border text-xs font-black text-cyan-400 border-white/10">Flagship: {currentFlagships}/1</div>
-                        <div className="px-4 py-2 rounded-xl bg-white/5 border text-xs font-black text-[#ea580c] border-white/10">Regular: {currentRegulars}/{maxRegular}</div>
+                        <div className={`px-4 py-2 rounded-xl bg-white/5 border text-xs font-black border-white/10 ${currentTech === limits[tier].tech ? 'text-cyan-400' : 'text-slate-500'}`}>Tech: {currentTech}/{limits[tier].tech}</div>
+                        <div className={`px-4 py-2 rounded-xl bg-white/5 border text-xs font-black border-white/10 ${currentNonTech === limits[tier].nonTech ? 'text-[#ea580c]' : 'text-slate-500'}`}>Non-Tech: {currentNonTech}/{limits[tier].nonTech}</div>
                       </div>
                     )}
                   </div>
 
                   <div className="space-y-12">
+                    {/* SECTION: COMPULSORY */}
                     <div>
                         <h4 className="text-[10px] font-mono text-[#ea580c] uppercase tracking-[0.5em] mb-6 flex items-center gap-3"><Star size={14} /> Compulsory Flagships</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {ALL_EVENTS.filter(e => e.isFlagship).map(f => {
                                 const isSelected = selectedEvents.includes(f.id);
-                                const isFaded = !isSelected && isLimitReached(true);
+                                const isLocked = f.id === 'treasure';
+                                const isFaded = tier !== 'gold' && !isSelected && (isLocked || (f.isTech && hasTechFlagship));
+                                
                                 return (
-                                    <button key={f.id} onClick={() => handleEventToggle(f.id, true)} className={`p-6 rounded-3xl border-2 text-left transition-all ${isSelected ? 'border-[#ea580c] bg-[#ea580c]/10' : 'border-white/5 bg-black/40'} ${isFaded ? 'opacity-20 grayscale' : 'opacity-100'}`}>
-                                        <span className="text-[11px] font-black uppercase text-white block mb-1">{f.name}</span>
-                                        <span className="text-[9px] text-cyan-400 font-mono tracking-widest uppercase">Technical</span>
-                                        {isSelected && <CheckCircle2 size={18} className="text-[#ea580c] absolute top-6 right-6" />}
+                                    <button key={f.id} onClick={() => handleEventToggle(f.id)} disabled={isLocked || tier === 'gold'} className={`relative p-8 rounded-3xl border-2 text-left transition-all ${isSelected ? 'border-[#ea580c] bg-[#ea580c]/10' : 'border-white/5 bg-black/40'} ${isFaded ? 'opacity-20 grayscale' : 'opacity-100'}`}>
+                                        <span className="text-[13px] font-black uppercase text-white block mb-2">{f.name}</span>
+                                        <span className="text-[9px] text-cyan-400 font-mono tracking-widest uppercase">{f.isTech ? 'Technical' : 'Non-Technical'}</span>
+                                        {isLocked ? <Lock size={18} className="text-[#ea580c] absolute top-8 right-8" /> : isSelected && <CheckCircle2 size={18} className="text-[#ea580c] absolute top-8 right-8" />}
                                     </button>
                                 );
                             })}
                         </div>
                     </div>
+
+                    {/* SECTION: ADDITIONAL */}
                     <div>
                         <h4 className="text-[10px] font-mono text-slate-600 uppercase tracking-[0.5em] mb-6 flex items-center gap-3"><MousePointer2 size={14} /> Additional Selections</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {ALL_EVENTS.filter(e => !e.isFlagship).map(e => {
                                 const isSelected = selectedEvents.includes(e.id);
-                                const isFaded = !isSelected && isLimitReached(false);
+                                const isFaded = tier !== 'gold' && !isSelected && (
+                                  (e.isTech && currentTech >= limits[tier].tech) ||
+                                  (!e.isTech && currentNonTech >= limits[tier].nonTech)
+                                );
+
                                 return (
-                                    <button key={e.id} onClick={() => handleEventToggle(e.id, false)} className={`p-6 rounded-2xl border-2 text-left flex justify-between items-center transition-all ${isSelected ? 'border-[#ea580c] bg-[#ea580c]/10' : 'border-white/5 bg-black/40'} ${isFaded ? 'opacity-20 grayscale' : 'opacity-100'}`}>
+                                    <button key={e.id} onClick={() => handleEventToggle(e.id)} disabled={tier === 'gold'} className={`relative p-8 rounded-2xl border-2 text-left flex justify-between items-center transition-all ${isSelected ? 'border-[#ea580c] bg-[#ea580c]/10' : 'border-white/5 bg-black/40'} ${isFaded ? 'opacity-20 grayscale' : 'opacity-100'}`}>
                                         <div>
-                                          <span className="text-[12px] font-bold text-white block mb-1">{e.name}</span>
+                                          <span className="text-[13px] font-bold text-white block mb-1">{e.name}</span>
                                           <span className={`text-[8px] font-mono tracking-widest uppercase ${e.isTech ? 'text-cyan-400' : 'text-amber-500'}`}>{e.isTech ? 'Technical' : 'Non-Technical'}</span>
                                         </div>
                                         {isSelected && <CheckCircle2 size={18} className="text-[#ea580c]" />}
@@ -233,14 +258,25 @@ export default function TicketsPage() {
                   </div>
                 </div>
 
-                <div className="mt-10">
-                  {currentFlagships === 0 && (
-                    <p className="text-center text-amber-500 text-[10px] font-mono mb-8 animate-pulse uppercase tracking-widest"><AlertCircle size={14} className="inline mr-2" /> Participation in 1 Flagship Event is Compulsory</p>
+                <div className="mt-10 flex flex-col items-center">
+                  {/* REQUIREMENT ALERT MESSAGE (AS REQUESTED) */}
+                  {!isDeployReady() && tier !== 'gold' && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-2 mb-6 px-6 py-2 rounded-full bg-amber-500/5 border border-amber-500/10"
+                    >
+                      <AlertCircle size={14} className="text-amber-500" />
+                      <span className="text-[10px] font-mono font-bold text-amber-500 uppercase tracking-[0.2em]">
+                        Requirements: 1 Tech Flagship + {limits[tier].tech} Tech + {limits[tier].nonTech} Non-Tech
+                      </span>
+                    </motion.div>
                   )}
+
                   <button 
-                    disabled={selectedEvents.length === 0 || currentFlagships === 0}
+                    disabled={!isDeployReady()}
                     onClick={handleInitialAuthorize}
-                    className="w-full py-7 rounded-[32px] bg-[#ea580c] font-black uppercase tracking-[0.4em] text-xs shadow-[0_20px_40px_rgba(234,88,12,0.3)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-20"
+                    className="w-full py-7 rounded-[32px] bg-[#ea580c] font-black uppercase tracking-[0.4em] text-xs shadow-[0_20px_40px_rgba(234,88,12,0.3)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-10 disabled:grayscale"
                   >
                     Deploy Authorized Access
                   </button>
@@ -250,47 +286,22 @@ export default function TicketsPage() {
           </>
         )}
 
-        {/* MODAL: SYNC IN PROGRESS (EXACT STYLING RESTORED) */}
+        {/* MODAL: SYNC IN PROGRESS */}
         <AnimatePresence>
           {isModalOpen && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4">
-              <motion.div 
-                initial={{ scale: 0.9, y: 20 }} 
-                animate={{ scale: 1, y: 0 }} 
-                className="relative w-full max-w-2xl bg-white rounded-[64px] p-12 text-center text-black shadow-3xl overflow-hidden"
-              >
-                {/* Bolt Icon Header */}
-                <div className="w-24 h-24 rounded-full bg-[#ea580c]/10 flex items-center justify-center mx-auto mb-10">
-                   <Zap size={40} className="text-[#ea580c] fill-[#ea580c]" />
-                </div>
-
-                {/* Main Heading */}
-                <h3 className="text-4xl font-black uppercase tracking-tighter mb-4 italic leading-none">
-                  SYNC <span className="text-[#ea580c]">IN PROGRESS</span>
-                </h3>
-                
-                <p className="text-sm font-medium text-slate-500 mb-10 max-w-sm mx-auto leading-relaxed">
-                  A separate payment window has been opened. Complete the form and upload your screenshot there first.
-                </p>
-
-                {/* Briefing Box */}
+              <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="relative w-full max-w-2xl bg-white rounded-[64px] p-12 text-center text-black shadow-3xl">
+                <div className="w-24 h-24 rounded-full bg-[#ea580c]/10 flex items-center justify-center mx-auto mb-10"><Zap size={40} className="text-[#ea580c] fill-[#ea580c]" /></div>
+                <h3 className="text-4xl font-black uppercase mb-4 italic leading-none">SYNC <span className="text-[#ea580c]">IN PROGRESS</span></h3>
                 <div className="p-8 bg-[#f8f9fc] rounded-[40px] border border-slate-100 text-left mb-10">
-                   <h4 className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
-                      <Info size={16} /> MISSION BRIEFING
-                   </h4>
+                   <h4 className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-[0.3em] mb-4 flex items-center gap-2"><Info size={16} /> MISSION BRIEFING</h4>
                    <ul className="text-[11px] font-black text-slate-700 space-y-3 uppercase leading-tight">
-                      <li className="flex items-start gap-2">• <span>DO NOT CLOSE THIS SITE YET.</span></li>
-                      <li className="flex items-start gap-2">• <span>UPLOAD YOUR PAYMENT SCREENSHOT IN THE POPUP FORM.</span></li>
-                      <li className="flex items-start gap-2">• <span>ONCE THE FORM SAYS "SUBMITTED", CLICK THE BUTTON BELOW.</span></li>
+                      <li>• DO NOT CLOSE THIS SITE.</li>
+                      <li>• UPLOAD PAYMENT SCREENSHOT IN THE POPUP FORM.</li>
+                      <li>• CLICK BELOW ONLY AFTER FORM SUBMISSION.</li>
                    </ul>
                 </div>
-
-                {/* Pill Button */}
-                <button 
-                  disabled={isProcessing}
-                  onClick={handleFinalCompletionSync}
-                  className="w-full py-7 bg-black text-white rounded-full font-black text-[10px] tracking-[0.4em] hover:bg-[#ea580c] transition-all uppercase shadow-2xl active:scale-95 disabled:opacity-50"
-                >
+                <button disabled={isProcessing} onClick={handleFinalCompletionSync} className="w-full py-7 bg-black text-white rounded-full font-black text-[10px] tracking-[0.4em] hover:bg-[#ea580c] transition-all uppercase shadow-2xl active:scale-95 disabled:opacity-50">
                   {isProcessing ? <Loader2 className="animate-spin mx-auto" /> : "I HAVE COMPLETED REGISTRATION"}
                 </button>
               </motion.div>

@@ -64,33 +64,31 @@ export default function TicketsPage() {
     gold: { tech: 5, nonTech: 5 } 
   };
 
-  const currentTech = selectedEvents.filter(id => ALL_EVENTS.find(e => e.id === id)?.isTech).length;
-  const currentNonTech = selectedEvents.filter(id => ALL_EVENTS.find(e => e.id === id)?.isTech === false).length;
-  const hasTechFlagship = selectedEvents.some(id => id === 'paper' || id === 'poster');
+  const techSelected = selectedEvents.filter(id => ALL_EVENTS.find(e => e.id === id)?.isTech);
+  const nonTechSelected = selectedEvents.filter(id => ALL_EVENTS.find(e => e.id === id)?.isTech === false);
+  const techFlagshipPicked = techSelected.filter(id => ALL_EVENTS.find(e => e.id === id)?.isFlagship);
 
   const handleTierSelection = (selectedTier: 'gold' | 'silver' | 'bronze') => {
     setTier(selectedTier);
-    if (selectedTier === 'gold') {
-      setSelectedEvents(ALL_EVENTS.map(e => e.id));
-    } else {
-      setSelectedEvents(['treasure']); // Locked Non-Tech Flagship
-    }
+    setSelectedEvents(['treasure']); // All tiers start with Treasure Hunt locked
   };
 
   const handleEventToggle = (id: string) => {
-    if (tier === 'gold' || id === 'treasure') return;
+    if (id === 'treasure') return; // Locked for all tiers
+
     const event = ALL_EVENTS.find(e => e.id === id)!;
     const isSelected = selectedEvents.includes(id);
 
     if (isSelected) {
       setSelectedEvents(prev => prev.filter(eid => eid !== id));
     } else {
-      // Rule: Only 1 Tech Flagship for Bronze/Silver
-      if (event.isFlagship && event.isTech && hasTechFlagship) return;
+      // 1 Tech Flagship Rule (Only for Bronze and Silver)
+      if (tier !== 'gold' && event.isTech && event.isFlagship && techFlagshipPicked.length >= 1) return;
 
-      if (event.isTech && currentTech < limits[tier!].tech) {
+      // Tech/Non-Tech Quota Rules
+      if (event.isTech && techSelected.length < limits[tier!].tech) {
         setSelectedEvents(prev => [...prev, id]);
-      } else if (!event.isTech && currentNonTech < limits[tier!].nonTech) {
+      } else if (!event.isTech && nonTechSelected.length < limits[tier!].nonTech) {
         setSelectedEvents(prev => [...prev, id]);
       }
     }
@@ -98,8 +96,11 @@ export default function TicketsPage() {
 
   const isDeployReady = () => {
     if (!tier) return false;
-    if (tier === 'gold') return true;
-    return currentTech === limits[tier].tech && currentNonTech === limits[tier].nonTech && hasTechFlagship;
+    // Condition: All slots filled. For Bronze/Silver, also check for 1 Tech Flagship.
+    const countsMatch = techSelected.length === limits[tier].tech && nonTechSelected.length === limits[tier].nonTech;
+    const flagshipCheck = tier === 'gold' ? true : techFlagshipPicked.length === 1;
+    
+    return countsMatch && flagshipCheck;
   };
 
   const handleInitialAuthorize = () => {
@@ -163,7 +164,7 @@ export default function TicketsPage() {
               </div>
             </header>
 
-            {/* IDENTIFICATION */}
+            {/* 01: IDENTIFICATION */}
             <section className="mb-12">
               <h3 className="text-slate-500 font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">01 Identification</h3>
               <div className="grid grid-cols-2 gap-4">
@@ -176,99 +177,34 @@ export default function TicketsPage() {
             </section>
 
             {/* 02: CATEGORY */}
-{studentType && (
-<motion.section
-initial={{ opacity: 0 }}
-animate={{ opacity: 1 }}
-className="mb-12"
->
-<h3 className="text-slate-500 font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">
-  02 Select Category
-</h3>
+            {studentType && (
+              <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-12">
+                <h3 className="text-slate-500 font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">02 Select Category</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[
+                    { id: "bronze", icon: Star, name: "Bronze", prices: { cit: "₹299 (No GST)", other: "₹353 (Incl. GST)" } },
+                    { id: "silver", icon: Crown, name: "Silver", prices: { cit: "₹499 (No GST)", other: "₹589 (Incl. GST)" } },
+                    { id: "gold", icon: Zap, name: "Gold", prices: { cit: "₹699 (No GST)", other: "₹825 (Incl. GST)" } },
+                  ].map((t) => (
+                    <button key={t.id} onClick={() => handleTierSelection(t.id as any)} className={`p-8 rounded-[36px] border-2 transition-all flex flex-col items-center gap-4 ${tier === t.id ? "border-[#ea580c] bg-[#ea580c]/10" : "border-white/5 bg-white/2"}`}>
+                      <t.icon size={36} className={tier === t.id ? "text-[#ea580c]" : "text-slate-700"} />
+                      <div className="text-center">
+                        <span className="font-black uppercase tracking-[0.3em] text-[11px] block">{t.name}</span>
+                        <div className="relative h-10 mt-1 overflow-hidden">
+                          <AnimatePresence mode="wait">
+                            <motion.span key={`${studentType}-${t.id}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="absolute inset-0 text-[10px] font-mono text-slate-500 block">
+                              {studentType === "cit" ? t.prices.cit : t.prices.other}
+                            </motion.span>
+                          </AnimatePresence>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </motion.section>
+            )}
 
-<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-  {[
-    {
-      id: "bronze",
-      icon: Star,
-      name: "Bronze",
-      prices: {
-        cit: "₹299 (No GST)",
-        other: "₹353 (Incl. GST)",
-      },
-    },
-    {
-      id: "silver",
-      icon: Crown,
-      name: "Silver",
-      prices: {
-        cit: "₹499 (No GST)",
-        other: "₹589 (Incl. GST)",
-      },
-    },
-    {
-      id: "gold",
-      icon: Zap,
-      name: "Gold",
-      prices: {
-        cit: "₹699 (No GST)",
-        other: "₹825 (Incl. GST)",
-      },
-    },
-  ].map((t) => {
-    const price =
-      studentType === "cit" ? t.prices.cit : t.prices.other;
-
-    return (
-      <button
-        key={t.id}
-        onClick={() => {
-          setTier(t.id as any);
-          setSelectedEvents([]);
-        }}
-        className={`p-8 rounded-[36px] border-2 transition-all flex flex-col items-center gap-4 ${
-          tier === t.id
-            ? "border-[#ea580c] bg-[#ea580c]/10"
-            : "border-white/5 bg-white/2"
-        }`}
-      >
-        <t.icon
-          size={36}
-          className={
-            tier === t.id ? "text-[#ea580c]" : "text-slate-700"
-          }
-        />
-
-        <div className="text-center">
-          <span className="font-black uppercase tracking-[0.3em] text-[11px] block">
-            {t.name}
-          </span>
-
-          {/* Animated Price */}
-          <div className="relative h-10 mt-1 overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={`${studentType}-${t.id}`}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                className="absolute inset-0 text-[10px] font-mono text-slate-500 block"
-              >
-                {price}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-        </div>
-      </button>
-    );
-  })}
-</div>
-</motion.section>
-)}
-
-
-            {/* CONFIGURATION */}
+            {/* 03: CONFIGURATION */}
             {tier && (
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
                 <div className="bg-[#0b1021]/80 backdrop-blur-3xl border border-white/5 rounded-[48px] p-8 md:p-14 shadow-2xl relative">
@@ -277,26 +213,28 @@ className="mb-12"
                       <h2 className="text-3xl font-black uppercase italic leading-none mb-2">Configure Events</h2>
                       <p className="text-[10px] font-mono text-slate-600 uppercase tracking-widest">Protocol: {tier} Selection</p>
                     </div>
-                    {tier !== 'gold' && (
-                      <div className="flex gap-4">
-                        <div className={`px-4 py-2 rounded-xl bg-white/5 border text-xs font-black border-white/10 ${currentTech === limits[tier].tech ? 'text-cyan-400' : 'text-slate-500'}`}>Tech: {currentTech}/{limits[tier].tech}</div>
-                        <div className={`px-4 py-2 rounded-xl bg-white/5 border text-xs font-black border-white/10 ${currentNonTech === limits[tier].nonTech ? 'text-[#ea580c]' : 'text-slate-500'}`}>Non-Tech: {currentNonTech}/{limits[tier].nonTech}</div>
-                      </div>
-                    )}
+                    <div className="flex gap-4">
+                        <div className={`px-4 py-2 rounded-xl bg-white/5 border text-xs font-black border-white/10 ${techSelected.length === limits[tier].tech ? 'text-cyan-400' : 'text-slate-500'}`}>Tech: {techSelected.length}/{limits[tier].tech}</div>
+                        <div className={`px-4 py-2 rounded-xl bg-white/5 border text-xs font-black border-white/10 ${nonTechSelected.length === limits[tier].nonTech ? 'text-[#ea580c]' : 'text-slate-500'}`}>Non-Tech: {nonTechSelected.length}/{limits[tier].nonTech}</div>
+                    </div>
                   </div>
 
                   <div className="space-y-12">
-                    {/* SECTION: COMPULSORY */}
+                    {/* SECTION: COMPULSORY FLAGSHIPS */}
                     <div>
                         <h4 className="text-[10px] font-mono text-[#ea580c] uppercase tracking-[0.5em] mb-6 flex items-center gap-3"><Star size={14} /> Compulsory Flagships</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {ALL_EVENTS.filter(e => e.isFlagship).map(f => {
                                 const isSelected = selectedEvents.includes(f.id);
                                 const isLocked = f.id === 'treasure';
-                                const isFaded = tier !== 'gold' && !isSelected && (isLocked || (f.isTech && hasTechFlagship));
+                                // Fading logic based on Tech limit and Tech Flagship rule (Only for Bronze/Silver)
+                                const isFaded = !isSelected && (
+                                  (f.isTech && techSelected.length >= limits[tier].tech) ||
+                                  (tier !== 'gold' && f.isTech && techFlagshipPicked.length >= 1)
+                                );
                                 
                                 return (
-                                    <button key={f.id} onClick={() => handleEventToggle(f.id)} disabled={isLocked || tier === 'gold'} className={`relative p-8 rounded-3xl border-2 text-left transition-all ${isSelected ? 'border-[#ea580c] bg-[#ea580c]/10' : 'border-white/5 bg-black/40'} ${isFaded ? 'opacity-20 grayscale' : 'opacity-100'}`}>
+                                    <button key={f.id} onClick={() => handleEventToggle(f.id)} disabled={isLocked} className={`relative p-8 rounded-3xl border-2 text-left transition-all ${isSelected ? 'border-[#ea580c] bg-[#ea580c]/10 shadow-[0_0_20px_rgba(234,88,12,0.1)]' : 'border-white/5 bg-black/40'} ${isFaded ? 'opacity-20 grayscale' : 'opacity-100'}`}>
                                         <span className="text-[13px] font-black uppercase text-white block mb-2">{f.name}</span>
                                         <span className="text-[9px] text-cyan-400 font-mono tracking-widest uppercase">{f.isTech ? 'Technical' : 'Non-Technical'}</span>
                                         {isLocked ? <Lock size={18} className="text-[#ea580c] absolute top-8 right-8" /> : isSelected && <CheckCircle2 size={18} className="text-[#ea580c] absolute top-8 right-8" />}
@@ -306,19 +244,19 @@ className="mb-12"
                         </div>
                     </div>
 
-                    {/* SECTION: ADDITIONAL */}
+                    {/* SECTION: ADDITIONAL SELECTIONS */}
                     <div>
                         <h4 className="text-[10px] font-mono text-slate-600 uppercase tracking-[0.5em] mb-6 flex items-center gap-3"><MousePointer2 size={14} /> Additional Selections</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {ALL_EVENTS.filter(e => !e.isFlagship).map(e => {
                                 const isSelected = selectedEvents.includes(e.id);
-                                const isFaded = tier !== 'gold' && !isSelected && (
-                                  (e.isTech && currentTech >= limits[tier].tech) ||
-                                  (!e.isTech && currentNonTech >= limits[tier].nonTech)
+                                const isFaded = !isSelected && (
+                                  (e.isTech && techSelected.length >= limits[tier].tech) ||
+                                  (!e.isTech && nonTechSelected.length >= limits[tier].nonTech)
                                 );
 
                                 return (
-                                    <button key={e.id} onClick={() => handleEventToggle(e.id)} disabled={tier === 'gold'} className={`relative p-8 rounded-2xl border-2 text-left flex justify-between items-center transition-all ${isSelected ? 'border-[#ea580c] bg-[#ea580c]/10' : 'border-white/5 bg-black/40'} ${isFaded ? 'opacity-20 grayscale' : 'opacity-100'}`}>
+                                    <button key={e.id} onClick={() => handleEventToggle(e.id)} className={`relative p-8 rounded-2xl border-2 text-left flex justify-between items-center transition-all ${isSelected ? 'border-[#ea580c] bg-[#ea580c]/10 shadow-[0_0_20px_rgba(234,88,12,0.1)]' : 'border-white/5 bg-black/40'} ${isFaded ? 'opacity-20 grayscale' : 'opacity-100'}`}>
                                         <div>
                                           <span className="text-[13px] font-bold text-white block mb-1">{e.name}</span>
                                           <span className={`text-[8px] font-mono tracking-widest uppercase ${e.isTech ? 'text-cyan-400' : 'text-amber-500'}`}>{e.isTech ? 'Technical' : 'Non-Technical'}</span>
@@ -333,16 +271,13 @@ className="mb-12"
                 </div>
 
                 <div className="mt-10 flex flex-col items-center">
-                  {/* REQUIREMENT ALERT MESSAGE (AS REQUESTED) */}
-                  {!isDeployReady() && tier !== 'gold' && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-2 mb-6 px-6 py-2 rounded-full bg-amber-500/5 border border-amber-500/10"
-                    >
+                  {!isDeployReady() && (
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 mb-6 px-6 py-2 rounded-full bg-amber-500/5 border border-amber-500/10">
                       <AlertCircle size={14} className="text-amber-500" />
                       <span className="text-[10px] font-mono font-bold text-amber-500 uppercase tracking-[0.2em]">
-                        Requirements: 1 Tech Flagship + {limits[tier].tech} Tech + {limits[tier].nonTech} Non-Tech
+                        {tier === 'gold' 
+                          ? `Requirements: All 5 Tech + All 5 Non-Tech Events` 
+                          : `Requirements: 1 Tech Flagship + ${limits[tier].tech} Tech + ${limits[tier].nonTech} Non-Tech`}
                       </span>
                     </motion.div>
                   )}

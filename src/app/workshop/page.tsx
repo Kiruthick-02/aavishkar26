@@ -10,7 +10,8 @@ import { useRouter } from 'next/navigation';
 import { REGISTRATIONS_OPEN } from '@/lib/registration-config';
 import { Clock } from 'lucide-react';
 
-const WORKSHOP_GFORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdwvP7_X-JZp1kuAbMTLYXPPISqTs96knSK_B_5bxt5JiMVmA/viewform';
+const WORKSHOP_ONLY_GFORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfK5W3Iea_vRRqGl7Yz6tp8bEN2HpmkmvEahuH04Jd5kDLzxg/viewform?usp=header';
+const WORKSHOP_PLUS_NONTECH_GFORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeZxfo-1NT0-AEgPqXjRa_QA2WRroqUrFJrJ7XzawW7oSegqw/viewform?usp=publish-editor';
 
 const WORKSHOP_NON_TECH_NAMES = [
   'Triangle Rush', 'Flip and Catch', 'Colour Confusion', 'Typing Sprint',
@@ -49,11 +50,12 @@ export default function WorkshopPage() {
       router.push('/login?redirect=/workshop');
       return;
     }
+    const formUrl = registrationType === 'workshop_plus_nontech' ? WORKSHOP_PLUS_NONTECH_GFORM_URL : WORKSHOP_ONLY_GFORM_URL;
     const width = 600;
     const height = 800;
     const left = window.screenX + (window.outerWidth - width) / 2;
     const top = window.screenY + (window.outerHeight - height) / 2;
-    window.open(WORKSHOP_GFORM_URL, 'WorkshopForm', `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`);
+    window.open(formUrl, 'WorkshopForm', `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`);
     setIsModalOpen(true);
   };
 

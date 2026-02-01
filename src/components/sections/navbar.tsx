@@ -43,6 +43,7 @@ const Navbar = () => {
     { name: 'About', href: '/#about-section' },
     { name: 'Sponsors', href: '/sponsors' },
     { name: 'Events', href: '/events' },
+    { name: 'Workshop', href: '/workshop' },
     { name: 'Synergy', href: '/synergy' },
   ]
 

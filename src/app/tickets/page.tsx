@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Crown, Zap, Loader2, CheckCircle2, AlertCircle, ShieldCheck, MousePointer2, Info, ArrowRight, Lock } from 'lucide-react';
 
-// Firebase Imports
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
+import { REGISTRATIONS_OPEN } from '@/lib/registration-config';
+import { Clock } from 'lucide-react';
 
 // --- DATA STRUCTURE ---
 const ALL_EVENTS = [
@@ -154,6 +155,14 @@ export default function TicketsPage() {
              </div>
              <h1 className="text-4xl font-black uppercase mb-4 italic">Protocol <span className="text-[#ea580c]">Active</span></h1>
              <button onClick={() => router.push('/users')} className="px-10 py-4 bg-[#ea580c] rounded-full font-bold text-xs tracking-widest flex items-center gap-2 mx-auto uppercase">VIEW IDENTITY CORE <ArrowRight size={16} /></button>
+          </div>
+        ) : !REGISTRATIONS_OPEN ? (
+          <div className="text-center py-32">
+            <div className="w-24 h-24 rounded-full bg-[#ea580c]/10 flex items-center justify-center mx-auto mb-8 border border-[#ea580c]/20">
+              <Clock size={48} className="text-[#ea580c]" />
+            </div>
+            <h1 className="text-4xl font-black uppercase mb-4 italic">Coming <span className="text-[#ea580c]">Soon</span></h1>
+            <p className="text-slate-400 font-sans mb-8 max-w-md mx-auto">Registrations are temporarily closed. Check back later.</p>
           </div>
         ) : (
           <>

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { User as UserIcon, Mail, School, Zap, Phone, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { User as UserIcon, Mail, School, Zap, Phone, ShieldCheck, ArrowRight, CheckCircle2, Calendar, Ticket } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function UserPage() {
@@ -27,6 +27,7 @@ export default function UserPage() {
   }, [router]);
 
   if (loading) return <div className="min-h-screen bg-[#020617] flex items-center justify-center"><Loader2 className="animate-spin text-[#ea580c]" /></div>;
+  const workshopReg = profile?.workshop_registration;
 
   return (
     <div className="min-h-screen bg-[#020617] py-24 px-4 relative">
@@ -62,7 +63,31 @@ export default function UserPage() {
           </div>
 
           {/* EVENTS LIST */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-8 space-y-8">
+            {workshopReg && (
+              <div className="rounded-[32px] bg-white/[0.03] border border-[#EAB308]/20 p-8 backdrop-blur-3xl">
+                <div className="flex items-center gap-3 mb-4 border-b border-white/10 pb-4">
+                  <Ticket className="w-6 h-6 text-[#EAB308]" />
+                  <h3 className="text-lg font-bold text-white uppercase tracking-tighter">Workshop Registration</h3>
+                </div>
+                <div className="flex flex-wrap gap-4 text-sm">
+                  <span className="px-4 py-2 rounded-xl bg-[#EAB308]/10 border border-[#EAB308]/20 text-[#EAB308] font-bold uppercase">
+                    {workshopReg.registration_type === 'workshop_plus_nontech' ? 'Workshop + 8 non-tech events' : 'Workshop only'}
+                  </span>
+                  {workshopReg.fee != null && (
+                    <span className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-300">
+                      ₹{workshopReg.fee} · {workshopReg.student_type === 'cit' ? 'CIT' : 'Other'}
+                    </span>
+                  )}
+                  {workshopReg.registered_at && (
+                    <span className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-400 text-xs flex items-center gap-2">
+                      <Calendar size={14} /> {new Date(workshopReg.registered_at).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
             <div className="rounded-[32px] bg-white/[0.03] border border-white/10 p-10 backdrop-blur-3xl min-h-[400px]">
               <div className="flex justify-between items-center mb-10 border-b border-white/10 pb-6">
                  <h3 className="text-xl font-bold text-white uppercase tracking-tighter">Registered_Events</h3>

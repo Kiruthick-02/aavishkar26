@@ -25,6 +25,7 @@ const TECH_EVENTS = [
     description: 'Encourages concise and visually impactful communication of ideas, research concepts, and engineering innovations. Participants present well-structured posters highlighting objectives, methodology, and key findings.', 
     is_technical: true, 
     is_flagship: true, 
+    team_size: '1 to 5',
     contacts: GENERAL_CONTACTS,
     image_url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2574&auto=format&fit=crop', 
     themes: [
@@ -46,6 +47,7 @@ const TECH_EVENTS = [
     description: 'A platform for students and researchers to showcase innovative ideas and technical expertise. Present original research, review studies, or case analyses related to emerging trends in engineering.', 
     is_technical: true, 
     is_flagship: true, 
+    team_size: '1 to 5',
     contacts: GENERAL_CONTACTS,
     image_url: 'https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=2670&auto=format&fit=crop',
     themes: [
@@ -67,6 +69,7 @@ const TECH_EVENTS = [
     description: 'Chemical Product Analysis: Test your understanding of chemical formulation. Analyze a commonly used chemical product and identify its constituent ingredients based on chemical knowledge.', 
     is_technical: true, 
     is_flagship: false, 
+    team_size: '1 to 3',
     contacts: GENERAL_CONTACTS,
     image_url: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=2670&auto=format&fit=crop',
     themes: [
@@ -85,6 +88,7 @@ const TECH_EVENTS = [
     description: 'Transform academic thesis and projects into industry-relevant technologies. Showcase how research outcomes can be converted into usable products, processes, or prototypes.', 
     is_technical: true, 
     is_flagship: false, 
+    team_size: '1 to 3',
     contacts: GENERAL_CONTACTS,
     image_url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2670&auto=format&fit=crop',
     themes: [
@@ -103,6 +107,7 @@ const TECH_EVENTS = [
     description: 'A fast-paced, buzzer-based technical quiz designed to test conceptual clarity, analytical thinking, and advanced knowledge in core and emerging areas of Chemical Engineering.', 
     is_technical: true, 
     is_flagship: false, 
+    team_size: '1 to 3',
     contacts: GENERAL_CONTACTS,
     image_url: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?q=80&w=2670&auto=format&fit=crop',
     themes: [],
@@ -112,7 +117,7 @@ const TECH_EVENTS = [
         items: [
           "Buzzer-Based Quiz",
           "Total Duration: 60 Minutes",
-          "Team Size: 3 to 5 Members",
+          "Team Size: 1 to 3 Members",
           "Registration Fee: ₹99 per head"
         ]
       },
@@ -180,11 +185,18 @@ const TECH_EVENTS = [
   },
 ];
 
-// --- NON-TECH EVENTS (DAY 1 & DAY 2) ---
+const WORKSHOP_DAY_NON_TECH = [
+  { id: 'nt-triangle-rush', name: 'Triangle Rush', description: 'A fast-paced coordination and strategy challenge. Race against time to complete triangular patterns.', is_technical: false, is_flagship: false, contacts: GENERAL_CONTACTS, image_url: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2670&auto=format&fit=crop' },
+  { id: 'nt-flip-catch', name: 'Flip and Catch', description: 'Test your reflexes and hand-eye coordination. Flip, catch, and score in this thrilling skill-based game.', is_technical: false, is_flagship: false, contacts: GENERAL_CONTACTS, image_url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=2670&auto=format&fit=crop' },
+  { id: 'nt-colour-confusion', name: 'Colour Confusion', description: 'A mind-bending challenge where colours and words collide. Beat the confusion and emerge victorious.', is_technical: false, is_flagship: false, contacts: GENERAL_CONTACTS, image_url: 'https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2670&auto=format&fit=crop' },
+  { id: 'nt-typing-sprint', name: 'Typing Sprint', description: 'Speed and accuracy on the keys. Race against the clock in this typing challenge.', is_technical: false, is_flagship: false, contacts: GENERAL_CONTACTS, image_url: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2670&auto=format&fit=crop' },
+  { id: 'nt-drip-drop-fill', name: 'Drip Drop Fill', description: 'Precision and patience combine. Fill the target with careful drips and drops.', is_technical: false, is_flagship: false, contacts: GENERAL_CONTACTS, image_url: 'https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?q=80&w=2670&auto=format&fit=crop' },
+  { id: 'nt-snap-it', name: 'Snap It', description: 'Capture the moment. A photography and quick-draw challenge that rewards the sharpest eye.', is_technical: false, is_flagship: false, contacts: GENERAL_CONTACTS, image_url: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=2670&auto=format&fit=crop' },
+  { id: 'nt-flash-pen', name: 'Flash and Pen', description: 'Memory meets speed. Observe the flash, then put pen to paper before time runs out.', is_technical: false, is_flagship: false, contacts: GENERAL_CONTACTS, image_url: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=2670&auto=format&fit=crop' },
+  { id: 'nt-hoop-hop', name: 'Hoop Hop Showdown', description: 'Agility and fun in one. Navigate through hoops and hop your way to the finish.', is_technical: false, is_flagship: false, contacts: GENERAL_CONTACTS, image_url: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=2670&auto=format&fit=crop' },
+];
+
 const NON_TECH_EVENTS = [
-  // --- DAY 1 EVENTS ---
-  
-  // --- DAY 2 EVENTS ---
   {
     id: 'nt-cup-match',
     name: 'Cup Match Challenge',
@@ -259,18 +271,25 @@ export default function EventsPage() {
   const router = useRouter();
 
   const allEvents = [...TECH_EVENTS, ...NON_TECH_EVENTS];
-  
+
   const filteredEvents = allEvents.filter(event => {
-    const matchesSearch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    const matchesSearch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          event.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = activeCategory === 'all' || 
-                           (activeCategory === 'technical' && event.is_technical) || 
+    const matchesCategory = activeCategory === 'all' ||
+                           (activeCategory === 'technical' && event.is_technical) ||
                            (activeCategory === 'non-technical' && !event.is_technical);
     return matchesSearch && matchesCategory;
   });
 
   const filteredTech = filteredEvents.filter(e => e.is_technical);
   const filteredNonTech = filteredEvents.filter(e => !e.is_technical);
+
+  const filteredWorkshopDay = WORKSHOP_DAY_NON_TECH.filter(event => {
+    const matchesSearch = event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         event.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const showWorkshopSection = activeCategory === 'all' || activeCategory === 'non-technical';
+    return showWorkshopSection && matchesSearch;
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -467,7 +486,7 @@ export default function EventsPage() {
         )}
 
         {filteredNonTech.length > 0 && (
-          <section>
+          <section className="mb-32">
             <div className="flex items-center gap-6 mb-12">
               <h2 className="text-2xl md:text-4xl font-bold font-display text-white uppercase tracking-tight flex items-center gap-4">
                 <span className="text-blue-400 text-lg font-mono">02/</span>
@@ -488,7 +507,32 @@ export default function EventsPage() {
           </section>
         )}
 
-        {filteredEvents.length === 0 && (
+        {filteredWorkshopDay.length > 0 && (
+          <section>
+            <div className="flex items-center gap-6 mb-12">
+              <h2 className="text-2xl md:text-4xl font-bold font-display text-white uppercase tracking-tight flex items-center gap-4">
+                <span className="text-[#EAB308] text-lg font-mono">03/</span>
+                DAY 1 – WORKSHOP (13 FEB)
+              </h2>
+              <div className="flex-1 h-px bg-gradient-to-r from-cyan-500/50 via-cyan-500/10 to-transparent" />
+            </div>
+            <p className="text-slate-400 text-sm font-sans mb-8 max-w-2xl">
+              These 8 non-technical events run in parallel with the one-day workshop on 13th February. Register via the Workshop page.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+              {filteredWorkshopDay.map((event) => (
+                <EventCard 
+                  key={event.id} 
+                  event={event} 
+                  onClick={() => setSelectedEvent(event)}
+                  isRegistered={userRegistrations.includes(event.id)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {filteredTech.length === 0 && filteredNonTech.length === 0 && filteredWorkshopDay.length === 0 && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -668,13 +712,14 @@ function EventModal({ event, onClose }: { event: any, onClose: () => void }) {
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Hiding Team Size for Events that have sections (details already in sections), keeping for others */}
                   {!event.sections && (
                     <div className="p-6 rounded-3xl border border-white/5 bg-white/[0.02]">
                       <h4 className="text-[10px] font-mono font-bold text-[#EAB308] uppercase tracking-[0.4em] mb-4 flex items-center gap-2">
                         <Users size={16} /> TEAM SIZE
                       </h4>
-                      <p className="text-white text-lg font-bold tracking-tight">MAX 3-5 MEMBERS</p>
+                      <p className="text-white text-lg font-bold tracking-tight">
+                        {event.team_size ? `${event.team_size.toUpperCase()} MEMBERS` : 'MAX 3-5 MEMBERS'}
+                      </p>
                     </div>
                   )}
                   

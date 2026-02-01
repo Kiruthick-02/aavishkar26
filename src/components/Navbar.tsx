@@ -34,6 +34,7 @@ export default function Navbar() {
     { name: 'Home', href: '/' },
     { name: 'Sponsors', href: '/sponsors' },
     { name: 'Event List', href: '/events' },
+    { name: 'Workshop', href: '/workshop' },
     { name: 'Tickets', href: '/tickets' },
     { name: 'Synergy', href: '/synergy' },
   ];

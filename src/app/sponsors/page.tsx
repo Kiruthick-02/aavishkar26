@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { 
   Zap, Sparkles, GraduationCap, Users, Heart, ShieldCheck, 
   Globe, Wallet, Building2, Briefcase, CheckCircle2,
-  Phone, Mail, Instagram 
+  Phone, Mail, Instagram, Target, Leaf
 } from 'lucide-react';
 
 export default function SponsorPage() {
@@ -82,7 +82,49 @@ export default function SponsorPage() {
           </div>
         </motion.div>
 
-        {/* ================= SPONSOR 2: TAMIL OVERSEAS (MOBILE FIX) ================= */}
+        {/* ================= SPONSOR 2: PRAGNA CONSULTANTS ================= */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative rounded-[32px] md:rounded-[48px] bg-white/[0.02] border border-white/10 p-6 md:p-16 backdrop-blur-3xl overflow-hidden shadow-2xl mb-20 md:mb-32"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-16 items-center">
+            <div className="lg:col-span-7 space-y-6 md:space-y-8 order-2 lg:order-1">
+              <div className="space-y-4">
+                <div className="flex items-center justify-center lg:justify-start gap-4">
+                  <Target className="text-[#ea580c]" size={28} />
+                  <h2 className="text-3xl md:text-5xl font-black font-display text-white uppercase italic tracking-tighter">
+                    Pragna <span className="text-[#ea580c]">Consultants</span>
+                  </h2>
+                </div>
+                <p className="text-xs font-mono text-[#ea580c] uppercase tracking-[0.3em] text-center lg:text-left">Leading to Wisdom</p>
+              </div>
+              <p className="text-slate-400 font-sans text-sm md:text-base leading-relaxed text-center lg:text-left">
+                Pragna Consultants Private Limited is a multidisciplinary consulting firm delivering integrated solutions in Risk Management, Project HSE Studies, Environmental Services, Business Excellence, and ESG & sustainability advisory, supported through its Centre for Sustainable Business Excellence. The company offers comprehensive services including ESG and sustainability reporting, regulatory and statutory compliance, environmental and social impact assessments, safety audits, HAZID, HAZOP, QRA, emergency response planning, and risk-based studies across the entire project lifecycle. It offers world-class training solutions for Six Sigma GB/BB certification and consulting solutions for breakthrough improvements, thereby promoting best practices in governance, operational efficiency, and sustainability integration, enabling organizations to strengthen compliance, mitigate risks, enhance stakeholder confidence, and achieve long-term sustainable and responsible growth.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                {["Risk & HSE", "ESG & Sustainability", "Business Excellence", "Six Sigma Training"].map((text, idx) => (
+                  <div key={idx} className="flex items-center gap-3 p-4 rounded-xl md:rounded-2xl bg-white/5 border border-white/10">
+                    <Leaf size={18} className="text-[#ea580c]" />
+                    <span className="text-[10px] font-bold text-white uppercase tracking-widest">{text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="lg:col-span-5 relative group order-1 lg:order-2">
+              <div className="relative overflow-hidden rounded-[30px] md:rounded-[40px] aspect-[1/1] md:aspect-[4/5] border border-white/10 shadow-3xl bg-white flex items-center justify-center p-8 md:p-12">
+                <img
+                  src="/images/pragna-consultants-logo.png"
+                  alt="Pragna Consultants - Leading to Wisdom"
+                  className="max-w-[90%] max-h-[80%] object-contain"
+                />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ================= SPONSOR 3: TAMIL OVERSEAS (MOBILE FIX) ================= */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}

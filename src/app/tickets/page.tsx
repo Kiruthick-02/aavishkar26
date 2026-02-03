@@ -191,9 +191,9 @@ export default function TicketsPage() {
                 <h3 className="text-slate-500 font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">02 Select Category</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {[
-                    { id: "bronze", icon: Star, name: "Bronze", prices: { cit: "₹299 (No GST)", other: "₹353 (Incl. GST)" } },
-                    { id: "silver", icon: Crown, name: "Silver", prices: { cit: "₹499 (No GST)", other: "₹589 (Incl. GST)" } },
-                    { id: "gold", icon: Zap, name: "Gold", prices: { cit: "₹699 (No GST)", other: "₹825 (Incl. GST)" } },
+                    { id: "bronze", icon: Star, name: "Bronze", prices: { cit: "₹250 (No GST)", other: "₹299 (Incl. GST)" } },
+                    { id: "silver", icon: Crown, name: "Silver", prices: { cit: "₹420 (No GST)", other: "₹499 (Incl. GST)" } },
+                    { id: "gold", icon: Zap, name: "Gold", prices: { cit: "₹590 (No GST)", other: "₹699 (Incl. GST)" } },
                   ].map((t) => (
                     <button key={t.id} onClick={() => handleTierSelection(t.id as any)} className={`p-8 rounded-[36px] border-2 transition-all flex flex-col items-center gap-4 ${tier === t.id ? "border-[#ea580c] bg-[#ea580c]/10" : "border-white/5 bg-white/2"}`}>
                       <t.icon size={36} className={tier === t.id ? "text-[#ea580c]" : "text-slate-700"} />

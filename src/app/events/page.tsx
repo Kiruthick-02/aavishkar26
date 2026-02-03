@@ -380,7 +380,7 @@ export default function EventsPage() {
     },
     {
       tier: "TIER 1 – Gold",
-      prices: { other: "₹699 incl. GST", cit: "₹599 (No GST)" },
+      prices: { other: "₹699 incl. GST", cit: "₹590 (No GST)" },
       details: [
         "All 5 Tech + 5 Non-Tech",
         "All Flagship events included",

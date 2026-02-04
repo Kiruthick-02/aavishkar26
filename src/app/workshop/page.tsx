@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Calendar, Users, Ticket, CheckCircle2, MessageCircle, Loader2, ArrowRight, ShieldCheck, Info } from 'lucide-react';
+import { Zap, Calendar, Ticket, CheckCircle2, Loader2, ArrowRight, ShieldCheck, Info } from 'lucide-react';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -10,8 +10,10 @@ import { useRouter } from 'next/navigation';
 import { WORKSHOP_REGISTRATIONS_OPEN } from '@/lib/registration-config';
 import { Clock } from 'lucide-react';
 
-const WORKSHOP_ONLY_GFORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfK5W3Iea_vRRqGl7Yz6tp8bEN2HpmkmvEahuH04Jd5kDLzxg/viewform?usp=header';
-const WORKSHOP_PLUS_NONTECH_GFORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeZxfo-1NT0-AEgPqXjRa_QA2WRroqUrFJrJ7XzawW7oSegqw/viewform?usp=publish-editor';
+const CIT_WORKSHOP_GFORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSeZxfo-1NT0-AEgPqXjRa_QA2WRroqUrFJrJ7XzawW7oSegqw/viewform?usp=publish-editor';
+const OTHER_WORKSHOP_GFORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSfK5W3Iea_vRRqGl7Yz6tp8bEN2HpmkmvEahuH04Jd5kDLzxg/viewform?usp=header';
 
 const WORKSHOP_NON_TECH_NAMES = [
   'Triangle Rush', 'Flip and Catch', 'Colour Confusion', 'Typing Sprint',
@@ -24,7 +26,6 @@ export default function WorkshopPage() {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [studentType, setStudentType] = useState<'cit' | 'other' | null>(null);
-  const [registrationType, setRegistrationType] = useState<'workshop_only' | 'workshop_plus_nontech' | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -41,16 +42,17 @@ export default function WorkshopPage() {
     return () => unsubscribe();
   }, []);
 
-  const fee = studentType === 'cit' ? 349 : studentType === 'other' ? 412 : null;
+  const fee = studentType === 'cit' ? 420 : studentType === 'other' ? 499 : null;
   const alreadyRegistered = user && profile?.workshop_registration != null;
-  const canRegister = studentType && registrationType && !alreadyRegistered;
+  const canRegister = !!studentType && !alreadyRegistered;
 
   const handleOpenRegistration = () => {
     if (!user) {
       router.push('/login?redirect=/workshop');
       return;
     }
-    const formUrl = registrationType === 'workshop_plus_nontech' ? WORKSHOP_PLUS_NONTECH_GFORM_URL : WORKSHOP_ONLY_GFORM_URL;
+    const formUrl =
+      studentType === 'cit' ? CIT_WORKSHOP_GFORM_URL : OTHER_WORKSHOP_GFORM_URL;
     const width = 600;
     const height = 800;
     const left = window.screenX + (window.outerWidth - width) / 2;
@@ -60,7 +62,7 @@ export default function WorkshopPage() {
   };
 
   const handleFinalCompletionSync = async () => {
-    if (!auth.currentUser || !profile || !studentType || !registrationType) return;
+    if (!auth.currentUser || !profile || !studentType) return;
     setIsProcessing(true);
     try {
       const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'N/A';
@@ -74,7 +76,7 @@ export default function WorkshopPage() {
           college_name: profile.college_name || 'N/A',
           phone: profile.phone || 'N/A',
           student_type: studentType,
-          registration_type: registrationType === 'workshop_only' ? 'Workshop only' : 'Workshop + 8 non-tech events',
+              registration_type: 'Workshop only',
           fee: fee != null ? `₹${fee}` : 'N/A',
           timestamp: new Date().toLocaleString(),
         }),
@@ -83,14 +85,14 @@ export default function WorkshopPage() {
       await setDoc(userRef, {
         workshop_registration: {
           student_type: studentType,
-          registration_type: registrationType,
+          registration_type: 'workshop_only',
           fee,
           registered_at: new Date().toISOString(),
         },
       }, { merge: true });
       setProfile((prev: any) => ({
         ...prev,
-        workshop_registration: { student_type: studentType, registration_type: registrationType, fee },
+        workshop_registration: { student_type: studentType, registration_type: 'workshop_only', fee },
       }));
       setIsModalOpen(false);
       router.push('/users');
@@ -110,7 +112,6 @@ export default function WorkshopPage() {
   }
 
   const showAlreadyRegistered = user && alreadyRegistered;
-  const showRegisterSection = !showAlreadyRegistered;
 
   return (
     <div className="min-h-screen bg-[#020617] py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -132,7 +133,7 @@ export default function WorkshopPage() {
             WORK<span className="text-[#EAB308]">SHOP</span>
           </h1>
           <p className="text-slate-400 font-sans text-base md:text-xl max-w-3xl mx-auto font-medium">
-            One-day workshop with 8 non-technical events in parallel. Separate or combined registration.
+            One-day workshop on 13th February with 8 non-technical events running in parallel. Those 8 events are on-spot registration only.
           </p>
         </motion.div>
 
@@ -150,7 +151,7 @@ export default function WorkshopPage() {
               </h2>
             </div>
             <p className="text-slate-300 font-sans text-base md:text-lg leading-relaxed mb-6">
-              The event will be conducted on <span className="text-[#EAB308] font-semibold">13th February</span> as a one-day workshop. Along with the workshop, 8 non-technical events will be conducted in parallel.
+              The event will be conducted on <span className="text-[#EAB308] font-semibold">13th February</span> as a one-day workshop. Along with the workshop, 8 non-technical events will be conducted in parallel on an on-spot registration basis.
             </p>
             <ul className="space-y-3 text-slate-400 font-sans">
               <li className="flex items-start gap-2">
@@ -159,45 +160,12 @@ export default function WorkshopPage() {
               </li>
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="w-5 h-5 text-[#EAB308] shrink-0 mt-0.5" />
-                <span>8 non-technical events run in parallel</span>
+                <span>8 non-technical events run in parallel with on-spot registration only</span>
               </li>
             </ul>
-          </div>
-
-          <div className="p-8 md:p-12 rounded-[32px] bg-white/2 border border-blue-500/20 backdrop-blur-xl">
-            <div className="flex items-center gap-3 mb-6">
-              <MessageCircle className="w-8 h-8 text-blue-400" />
-              <h2 className="text-2xl md:text-3xl font-bold font-display text-white uppercase tracking-tight">
-                Panel Discussion
-              </h2>
-            </div>
-            <p className="text-slate-300 font-sans text-base md:text-lg leading-relaxed">
-              A panel discussion will be held at the end of the first day for all participants—whether you register for the workshop only or for the workshop plus all 8 non-technical events.
+            <p className="text-slate-400 font-sans text-sm mt-4">
+              Parallel non-technical events: {WORKSHOP_NON_TECH_NAMES.join(', ')}.
             </p>
-          </div>
-
-          <div className="p-8 md:p-12 rounded-[32px] bg-white/2 border border-white/10 backdrop-blur-xl">
-            <div className="flex items-center gap-3 mb-6">
-              <Users className="w-8 h-8 text-[#EAB308]" />
-              <h2 className="text-2xl md:text-3xl font-bold font-display text-white uppercase tracking-tight">
-                Registration Options
-              </h2>
-            </div>
-            <p className="text-slate-300 font-sans text-base md:text-lg leading-relaxed mb-6">
-              There will be separate registration for the workshop. Additionally, a combined registration is available that includes the workshop along with all 8 non-technical events.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-6 rounded-2xl border border-white/10 bg-white/3">
-                <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-2">Option 1</p>
-                <p className="text-white font-semibold">Workshop only</p>
-                <p className="text-slate-400 text-sm mt-1">Register for the one-day workshop.</p>
-              </div>
-              <div className="p-6 rounded-2xl border border-[#EAB308]/30 bg-[#EAB308]/5">
-                <p className="text-[10px] font-mono font-bold text-[#EAB308] uppercase tracking-widest mb-2">Option 2</p>
-                <p className="text-white font-semibold">Workshop + 8 non-tech events</p>
-                <p className="text-slate-400 text-sm mt-1">Combined registration for workshop and all 8 non-technical events.</p>
-              </div>
-            </div>
           </div>
 
           <div className="p-8 md:p-12 rounded-[32px] bg-white/2 border border-[#EAB308]/20 backdrop-blur-xl">
@@ -210,15 +178,15 @@ export default function WorkshopPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="p-6 rounded-2xl border border-white/10 bg-white/3">
                 <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-2">CIT students</p>
-                <p className="text-2xl font-black font-display text-[#EAB308]">₹349</p>
+                <p className="text-2xl font-black font-display text-[#EAB308]">₹420 (No. GST)</p>
               </div>
               <div className="p-6 rounded-2xl border border-white/10 bg-white/3">
                 <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-2">Other institutions</p>
-                <p className="text-2xl font-black font-display text-[#EAB308]">₹412</p>
+                <p className="text-2xl font-black font-display text-[#EAB308]">₹499 (Incl. GST)</p>
               </div>
             </div>
             <p className="text-slate-500 text-sm font-mono uppercase tracking-wider mt-4">
-              Applies to both workshop-only and workshop + non-tech registration.
+              Applies to workshop registration only.
             </p>
           </div>
 
@@ -283,26 +251,9 @@ export default function WorkshopPage() {
                     <p className="font-bold uppercase tracking-widest text-[10px] text-white">
                       {type === 'cit' ? 'CIT Student' : 'Other Institution'}
                     </p>
-                    <p className="text-slate-500 text-xs mt-1">{type === 'cit' ? '₹349' : '₹412'}</p>
+                    <p className="text-slate-500 text-xs mt-1">{type === 'cit' ? '₹420' : '₹499'}</p>
                   </button>
                 ))}
-              </div>
-              <p className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.3em] mb-4">02 Registration type</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                <button
-                  onClick={() => setRegistrationType('workshop_only')}
-                  className={`p-6 rounded-2xl border-2 transition-all text-left ${registrationType === 'workshop_only' ? 'border-[#EAB308] bg-[#EAB308]/10' : 'border-white/10 bg-white/3 hover:border-white/20'}`}
-                >
-                  <p className="font-bold text-white">Workshop only</p>
-                  <p className="text-slate-500 text-sm mt-1">One-day workshop on 13th February</p>
-                </button>
-                <button
-                  onClick={() => setRegistrationType('workshop_plus_nontech')}
-                  className={`p-6 rounded-2xl border-2 transition-all text-left ${registrationType === 'workshop_plus_nontech' ? 'border-[#EAB308] bg-[#EAB308]/10' : 'border-white/10 bg-white/3 hover:border-white/20'}`}
-                >
-                  <p className="font-bold text-white">Workshop + 8 non-tech events</p>
-                  <p className="text-slate-500 text-sm mt-1">{WORKSHOP_NON_TECH_NAMES.join(', ')}</p>
-                </button>
               </div>
               <AnimatePresence mode="wait">
                 {canRegister && (

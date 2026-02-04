@@ -49,7 +49,7 @@ const Footer = () => {
                 href="mailto:anokhapr@cb.amrita.edu" 
                 className="group flex items-center gap-2 text-white hover:text-[#22d3ee] transition-colors duration-300 text-lg md:text-xl font-medium"
               >
-                ssivamuthu2006@gmail.com <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                aavishkar2026.cit@gmail.com <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
 

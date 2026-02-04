@@ -1,17 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { REGISTRATIONS_OPEN } from '@/lib/registration-config';
+import { REGISTRATIONS_OPEN, WORKSHOP_REGISTRATIONS_OPEN } from '@/lib/registration-config';
 
 export async function POST(req: NextRequest) {
   try {
-    if (!REGISTRATIONS_OPEN) {
+    const body = await req.json();
+    const { targetSheet } = body;
+
+    if (targetSheet === 'Sheet2' && !REGISTRATIONS_OPEN) {
       return NextResponse.json(
-        { error: 'Registrations are temporarily closed.' },
+        { error: 'Ticket registrations are temporarily closed.' },
         { status: 503 }
       );
     }
-    const body = await req.json();
-    const { targetSheet } = body;
+
+    if (targetSheet === 'Workshop' && !WORKSHOP_REGISTRATIONS_OPEN) {
+      return NextResponse.json(
+        { error: 'Workshop registrations are temporarily closed.' },
+        { status: 503 }
+      );
+    }
 
     let rowData: any[] = [];
     let range = "";

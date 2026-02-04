@@ -7,7 +7,7 @@ import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
-import { REGISTRATIONS_OPEN } from '@/lib/registration-config';
+import { WORKSHOP_REGISTRATIONS_OPEN } from '@/lib/registration-config';
 import { Clock } from 'lucide-react';
 
 const WORKSHOP_ONLY_GFORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfK5W3Iea_vRRqGl7Yz6tp8bEN2HpmkmvEahuH04Jd5kDLzxg/viewform?usp=header';
@@ -244,7 +244,7 @@ export default function WorkshopPage() {
                 View Profile <ArrowRight size={18} />
               </button>
             </motion.div>
-          ) : !REGISTRATIONS_OPEN ? (
+          ) : !WORKSHOP_REGISTRATIONS_OPEN ? (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -334,7 +334,7 @@ export default function WorkshopPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4"
+              className="fixed inset-0 z-200 flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4"
             >
               <motion.div
                 initial={{ scale: 0.9, y: 20 }}

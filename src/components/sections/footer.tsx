@@ -26,7 +26,7 @@ const Footer = () => {
             <div className="relative w-full aspect-[2/1] max-w-[600px]">
               <Image 
                 src={campusIllustration} 
-                alt="Amrita University Architectural Illustration" 
+                alt="Aavishkar'26 Logo" 
                 fill
                 className="object-contain object-left-bottom opacity-90"
                 priority

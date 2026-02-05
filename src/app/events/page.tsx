@@ -6,100 +6,114 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, query, where, getDocs, addDoc, doc, getDoc } from 'firebase/firestore';
-import { X, Info, Users, Phone, Zap, ArrowRight, ShieldCheck, Star, Search, Ticket, Layers, CheckCircle2, AlertCircle, Calendar, Trophy, Coins } from 'lucide-react';
+import { X, Info, Users, Phone, Zap, ArrowRight, ShieldCheck, Star, Search, Ticket, Layers, CheckCircle2, AlertCircle, Calendar, Trophy, Coins, Download } from 'lucide-react';
 
-// --- SHARED CONTACTS ---
 const GENERAL_CONTACTS = [
   'Kavyasri - 9360472535',
   'Padmapriya - 8807798794',
   'Jithesh - 8754020480'
 ];
 
+const ABSTRACT_EMAIL = 'aavishkar2026.cit@gmail.com';
+const PAPER_TEMPLATE_DOWNLOAD = '/api/download-paper-template';
 
+const COMMON_PAPER_POSTER_RULES = [
+  'Abstract submission is mandatory. Upload to official email: ' + ABSTRACT_EMAIL,
+  'Abstract word limit: 100–150 words. Submissions beyond this will not be considered.',
+  'Total duration: 10 minutes (including question-and-answer session).',
+  'Presentation must focus on technical aspects of the paper.',
+  'All team members must wear formal attire during the presentation.',
+  'Participants must maintain decorum, punctuality, and academic integrity.',
+  'The decision of the judges and organizing committee regarding selection and awards is final.',
+];
 
-// --- TECH EVENTS ---
+const PAPER_POSTER_THEMES = [
+  'AI/ML in Chemical/Allied Engineering',
+  'Waste to wealth and Circular Economy',
+  'Process safety, risk and disaster prevention',
+  'Carbon Capture and utilization',
+  'Environmental and sustainable development',
+  'Modelling and Simulation in Process Engineering',
+  'Catalysis and Reaction Engineering',
+  'Green Chemistry and Engineering',
+  'Alternative energy sources and storage',
+  'Advanced Materials and Nanotechnology',
+];
+
+const THESIS_THEMES = [
+  'Sustainable & Green Chemical Engineering',
+  'Energy & Thermal Engineering Technologies',
+  'Chemical Process Design & Optimization',
+  'Environmental Engineering & Pollution Control',
+  'Food, Pharmaceutical & Biochemical Technologies',
+  'Nanotechnology & Sensors',
+  'Safety, Reliability & Risk Engineering',
+];
+
 const TECH_EVENTS = [
-  { 
-    id: 'poster-presentation', 
-    name: 'Poster Presentation', 
-    description: 'Encourages concise and visually impactful communication of ideas, research concepts, and engineering innovations. Participants present well-structured posters highlighting objectives, methodology, and key findings.', 
-    is_technical: true, 
-    is_flagship: true, 
+  {
+    id: 'poster-presentation',
+    name: 'Poster Presentation',
+    description: 'Encourages concise and visually impactful communication of ideas, research concepts, and engineering innovations. Participants present well-structured posters highlighting objectives, methodology, and key findings.',
+    is_technical: true,
+    is_flagship: true,
     team_size: '1 to 5',
     contacts: GENERAL_CONTACTS,
-    image_url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2574&auto=format&fit=crop', 
-    themes: [
-      'AI/ML in Chemical/Allied Engineering',
-      'Waste to wealth and Circular Economy',
-      'Process safety, risk and disaster prevention',
-      'Carbon Capture and utilization',
-      'Environmental and sustainable development',
-      'Modelling and Simulation in Process Engineering',
-      'Catalysis and Reaction Engineering',
-      'Green Chemistry and Engineering',
-      'Alternative energy sources and storage',
-      'Advanced Materials and Nanotechnology'
-    ]
+    image_url: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2574&auto=format&fit=crop',
+    themes: PAPER_POSTER_THEMES,
+    sections: [
+      { title: 'Abstract Submission', items: ['Abstract submission is mandatory for both Paper and Poster Presentation.', 'Upload your abstract to the official email: ' + ABSTRACT_EMAIL, 'Abstract word limit must be 100–150 words. Submissions beyond the word limit will not be considered.'] },
+      { title: 'Template', content: 'Poster Presentation participants may use their own design/template based on their preference.', items: null },
+      { title: 'Common Rules (Paper & Poster)', items: COMMON_PAPER_POSTER_RULES },
+      { title: 'Prize Pool', items: ['1st Prize – ₹1,000', '2nd Prize – ₹800', '3rd Prize – ₹500'] },
+    ],
   },
-  { 
-    id: 'paper-presentation', 
-    name: 'Paper Presentation', 
-    description: 'A platform for students and researchers to showcase innovative ideas and technical expertise. Present original research, review studies, or case analyses related to emerging trends in engineering.', 
-    is_technical: true, 
-    is_flagship: true, 
+  {
+    id: 'paper-presentation',
+    name: 'Paper Presentation',
+    description: 'A platform for students and researchers to showcase innovative ideas and technical expertise. Present original research, review studies, or case analyses related to emerging trends in engineering.',
+    is_technical: true,
+    is_flagship: true,
     team_size: '1 to 5',
     contacts: GENERAL_CONTACTS,
     image_url: 'https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=2670&auto=format&fit=crop',
-    themes: [
-      'AI/ML in Chemical/Allied Engineering',
-      'Waste to wealth and Circular Economy',
-      'Process safety, risk and disaster prevention',
-      'Carbon Capture and utilization',
-      'Environmental and sustainable development',
-      'Modelling and Simulation in Process Engineering',
-      'Catalysis and Reaction Engineering',
-      'Green Chemistry and Engineering',
-      'Alternative energy sources and storage',
-      'Advanced Materials and Nanotechnology'
-    ]
+    themes: PAPER_POSTER_THEMES,
+    templateDownloadUrl: PAPER_TEMPLATE_DOWNLOAD,
+    templateDownloadLabel: "Aavishkar'26-Paper Presentation.pptx",
+    sections: [
+      { title: 'Abstract Submission', items: ['Abstract submission is mandatory. Upload to official email: ' + ABSTRACT_EMAIL, 'Abstract word limit: 100–150 words. Submissions beyond the word limit will not be considered.'] },
+      { title: 'Presentation Template', content: 'A presentation template is provided only for Paper Presentation. Participants must strictly use the official template uploaded by the organizers.', downloadUrl: PAPER_TEMPLATE_DOWNLOAD, downloadLabel: "Aavishkar'26-Paper Presentation.pptx" },
+      { title: 'Common Rules (Paper & Poster)', items: COMMON_PAPER_POSTER_RULES },
+      { title: 'Prize Pool', items: ['1st Prize – ₹2,500', '2nd Prize – ₹1,500', '3rd Prize – ₹500'] },
+    ],
   },
-  { 
-    id: 'reverse-engineering', 
-    name: 'Reverse Engineering', 
-    description: 'Chemical Product Analysis: Test your understanding of chemical formulation. Analyze a commonly used chemical product and identify its constituent ingredients based on chemical knowledge.', 
-    is_technical: true, 
-    is_flagship: false, 
+  {
+    id: 'reverse-engineering',
+    name: 'Reverse Engineering',
+    description: 'Chemical Product Analysis: Test your understanding of chemical formulation. Analyze a commonly used chemical product and identify its constituent ingredients based on chemical knowledge.',
+    is_technical: true,
+    is_flagship: false,
     team_size: '1 to 3',
     contacts: GENERAL_CONTACTS,
     image_url: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=2670&auto=format&fit=crop',
-    themes: [
-      'Sustainable & Green Chemical Engineering',
-      'Process Design, Optimization & Safety',
-      'Advanced Materials & Polymer Engineering',
-      'Biochemical & Pharmaceutical Engineering',
-      'Water, Wastewater & Environmental Engineering',
-      'Energy, Fuels & Emerging Technologies',
-      'Digitalization & AI in Chemical Engineering'
-    ]
+    themes: [],
+    sections: [
+      { title: 'Prize Pool', items: ['1st Prize – ₹500', '2nd Prize – ₹300', '3rd Prize – ₹200'] },
+    ],
   },
-  { 
-    id: 'thesis-to-technology', 
-    name: 'Thesis to Technology', 
-    description: 'Transform academic thesis and projects into industry-relevant technologies. Showcase how research outcomes can be converted into usable products, processes, or prototypes.', 
-    is_technical: true, 
-    is_flagship: false, 
+  {
+    id: 'thesis-to-technology',
+    name: 'Thesis to Technology',
+    description: 'Transform academic thesis and projects into industry-relevant technologies. Showcase how research outcomes can be converted into usable products, processes, or prototypes.',
+    is_technical: true,
+    is_flagship: false,
     team_size: '1 to 3',
     contacts: GENERAL_CONTACTS,
     image_url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2670&auto=format&fit=crop',
-    themes: [
-      'Sustainable & Green Chemical Engineering',
-      'Energy & Thermal Engineering Technologies',
-      'Chemical Process Design & Optimization',
-      'Environmental Engineering & Pollution Control',
-      'Food, Pharmaceutical & Biochemical Technologies',
-      'Nanotechnology & Sensors',
-      'Safety, Reliability & Risk Engineering'
-    ]
+    themes: THESIS_THEMES,
+    sections: [
+      { title: 'Prize Pool', items: ['1st Prize – ₹1,000', '2nd Prize – ₹500', '3rd Prize – ₹250'] },
+    ],
   },
   { 
     id: 'technical-quiz', 
@@ -494,6 +508,10 @@ export default function EventsPage() {
               </h2>
               <div className="flex-1 h-px bg-gradient-to-r from-[#EAB308]/50 via-[#EAB308]/10 to-transparent" />
             </div>
+            <p className="text-slate-400 text-sm font-sans mb-6 max-w-2xl flex items-center gap-2">
+              <Trophy className="w-4 h-4 text-[#EAB308]" />
+              Overall Winner (Day 1 – Non-Tech): ₹500 · Overall Winner (Day 2 – Non-Tech): ₹500 (based on cumulative performance).
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
               {filteredNonTech.map((event) => (
                 <EventCard 
@@ -665,11 +683,14 @@ function EventModal({ event, onClose }: { event: any, onClose: () => void }) {
                                 {section.isHeader && <AlertCircle size={18} />} {section.title}
                             </h4>
                             )}
-                            
                             {section.content && (
                             <p className="text-slate-300 text-sm leading-relaxed mb-3">{section.content}</p>
                             )}
-
+                            {section.downloadUrl && (
+                            <a href={section.downloadUrl} download={section.downloadLabel || undefined} className="inline-flex items-center gap-2 mt-3 px-4 py-2.5 rounded-xl bg-[#EAB308]/10 border border-[#EAB308]/30 text-[#EAB308] font-mono text-xs font-bold uppercase tracking-wider hover:bg-[#EAB308]/20 transition-colors">
+                              <Download size={16} /> {section.downloadLabel || 'Download template'}
+                            </a>
+                            )}
                             {section.items && (
                             <ul className={`space-y-2 ${section.isOrdered ? 'list-decimal pl-5' : 'list-none'}`}>
                                 {section.items.map((item: string, i: number) => (
@@ -694,8 +715,7 @@ function EventModal({ event, onClose }: { event: any, onClose: () => void }) {
                   </div>
                 )}
 
-                {/* Themes Section (Only if themes exist and NOT technical quiz/non-tech since they have structure) */}
-                {event.themes && event.themes.length > 0 && !event.sections && (
+                {event.themes && event.themes.length > 0 && (
                   <div className="p-6 rounded-3xl border border-white/5 bg-white/[0.02]">
                     <h4 className="text-[10px] font-mono font-bold text-[#EAB308] uppercase tracking-[0.4em] mb-4 flex items-center gap-2">
                       <Layers size={16} /> EVENT THEMES

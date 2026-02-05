@@ -376,7 +376,7 @@ export default function EventsPage() {
   {[
     {
       tier: "TIER 3 – Bronze",
-      prices: { other: "₹299 incl. GST", cit: "₹250 (No GST)" },
+      prices: { other: "₹199 incl. GST", cit: "₹170 (No GST)" },
       details: [
         "2 Tech + 2 Non-Tech",
         "Includes 1 Tech & 1 Non-Tech Flagship",
@@ -385,7 +385,7 @@ export default function EventsPage() {
     },
     {
       tier: "TIER 2 – Silver",
-      prices: { other: "₹499 incl. GST", cit: "₹420 (No GST)" },
+      prices: { other: "₹299 incl. GST", cit: "₹260 (No GST)" },
       details: [
         "3 Tech + 3 Non-Tech",
         "Includes 1 Tech & 1 Non-Tech Flagship",
@@ -394,7 +394,7 @@ export default function EventsPage() {
     },
     {
       tier: "TIER 1 – Gold",
-      prices: { other: "₹699 incl. GST", cit: "₹590 (No GST)" },
+      prices: { other: "₹499 incl. GST", cit: "₹420 (No GST)" },
       details: [
         "All 5 Tech + 5 Non-Tech",
         "All Flagship events included",

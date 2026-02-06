@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Crown, Zap, Loader2, CheckCircle2, AlertCircle, ShieldCheck, MousePointer2, Info, ArrowRight, Lock } from 'lucide-react';
+import { Star, Crown, Zap, Loader2, CheckCircle2, AlertCircle, ShieldCheck, MousePointer2, Info, ArrowRight, Lock, Calendar } from 'lucide-react';
 
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -168,8 +168,12 @@ export default function TicketsPage() {
           <>
             <header className="text-center mb-16">
               <h1 className="text-6xl font-black tracking-tighter mb-4 italic uppercase">Access <span className="text-[#ea580c]">Portal</span></h1>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[9px] font-mono text-slate-400 tracking-[0.3em] uppercase">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[9px] font-mono text-slate-400 tracking-[0.3em] uppercase mb-6">
                 <ShieldCheck size={12} className="text-[#ea580c]" /> Flagship Event Participation is Compulsory
+              </div>
+              <div className="space-y-2 text-slate-400 font-sans text-sm max-w-xl mx-auto">
+                <p className="flex items-center justify-center gap-2"><Calendar size={14} className="text-[#ea580c]" /> Registration deadline: <span className="text-[#ea580c] font-semibold">11.06.26</span></p>
+                <p>Fees below are <span className="text-white font-medium">per head</span>. All 5 tech events will be held on the morning of <span className="text-[#ea580c] font-semibold">February 14th</span>.</p>
               </div>
             </header>
 
@@ -191,9 +195,9 @@ export default function TicketsPage() {
                 <h3 className="text-slate-500 font-mono text-[10px] mb-4 uppercase tracking-[0.3em]">02 Select Category</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {[
-                    { id: "bronze", icon: Star, name: "Bronze", prices: { cit: "₹170 (No GST)", other: "₹199 (Incl. GST)" } },
-                    { id: "silver", icon: Crown, name: "Silver", prices: { cit: "₹260 (No GST)", other: "₹299 (Incl. GST)" } },
-                    { id: "gold", icon: Zap, name: "Gold", prices: { cit: "₹420 (No GST)", other: "₹499 (Incl. GST)" } },
+                    { id: "bronze", icon: Star, name: "Bronze", prices: { cit: "₹170 per head (No GST)", other: "₹199 per head (Incl. GST)" } },
+                    { id: "silver", icon: Crown, name: "Silver", prices: { cit: "₹260 per head (No GST)", other: "₹299 per head (Incl. GST)" } },
+                    { id: "gold", icon: Zap, name: "Gold", prices: { cit: "₹420 per head (No GST)", other: "₹499 per head (Incl. GST)" } },
                   ].map((t) => (
                     <button key={t.id} onClick={() => handleTierSelection(t.id as any)} className={`p-8 rounded-[36px] border-2 transition-all flex flex-col items-center gap-4 ${tier === t.id ? "border-[#ea580c] bg-[#ea580c]/10" : "border-white/5 bg-white/2"}`}>
                       <t.icon size={36} className={tier === t.id ? "text-[#ea580c]" : "text-slate-700"} />

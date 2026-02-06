@@ -356,9 +356,13 @@ export default function EventsPage() {
           <h1 className="text-5xl md:text-8xl font-bold font-display text-white mb-6 tracking-tighter uppercase">
             EVENT <span className="text-[#EAB308]">LIST</span>
           </h1>
-          <p className="text-slate-400 font-sans text-base md:text-xl max-w-2xl mx-auto font-medium mb-10">
+          <p className="text-slate-400 font-sans text-base md:text-xl max-w-2xl mx-auto font-medium mb-6">
             Explore technical and non-technical frontiers. Flagship events are mandatory for Tier 2 & 3.
           </p>
+          <div className="mb-10 space-y-2 text-slate-400 font-sans text-sm max-w-2xl mx-auto">
+            <p className="flex items-center justify-center gap-2"><Calendar className="w-4 h-4 text-[#EAB308]" /> Registration deadline: <span className="text-[#EAB308] font-semibold">11.06.26</span></p>
+            <p>Registration fees are <span className="text-white font-medium">per head</span>. All 5 tech events will be held on the morning of <span className="text-[#EAB308] font-semibold">February 14th</span>.</p>
+          </div>
           
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -376,7 +380,7 @@ export default function EventsPage() {
   {[
     {
       tier: "TIER 3 – Bronze",
-      prices: { other: "₹199 incl. GST", cit: "₹170 (No GST)" },
+      prices: { other: "₹199 per head (incl. GST)", cit: "₹170 per head (No GST)" },
       details: [
         "2 Tech + 2 Non-Tech",
         "Includes 1 Tech & 1 Non-Tech Flagship",
@@ -385,7 +389,7 @@ export default function EventsPage() {
     },
     {
       tier: "TIER 2 – Silver",
-      prices: { other: "₹299 incl. GST", cit: "₹260 (No GST)" },
+      prices: { other: "₹299 per head (incl. GST)", cit: "₹260 per head (No GST)" },
       details: [
         "3 Tech + 3 Non-Tech",
         "Includes 1 Tech & 1 Non-Tech Flagship",
@@ -394,7 +398,7 @@ export default function EventsPage() {
     },
     {
       tier: "TIER 1 – Gold",
-      prices: { other: "₹499 incl. GST", cit: "₹420 (No GST)" },
+      prices: { other: "₹499 per head (incl. GST)", cit: "₹420 per head (No GST)" },
       details: [
         "All 5 Tech + 5 Non-Tech",
         "All Flagship events included",
@@ -415,7 +419,7 @@ export default function EventsPage() {
 
       {/* Prices */}
       <div className="mb-6 space-y-1">
-        <p className="text-[#EAB308] font-black text-3xl font-display">
+        <p className="text-[#EAB308] font-black text-xl font-display">
           {item.prices.other}
         </p>
         <p className="text-slate-400 text-xs uppercase tracking-wider font-mono">

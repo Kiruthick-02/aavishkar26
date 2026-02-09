@@ -47,7 +47,7 @@ export default function UserPage() {
                 <UserIcon size={40} className="text-white" />
               </div>
               <h2 className="text-2xl font-bold text-center text-white uppercase">{profile?.first_name} {profile?.last_name}</h2>
-              <p className="text-center text-[10px] font-mono text-[#ea580c] mb-8">ID: {auth.currentUser?.uid.slice(0, 8).toUpperCase()}</p>
+              <p className="text-center text-[10px] font-mono text-[#ea580c] mb-8">Unique ID: {auth.currentUser?.uid.slice(0, 8).toUpperCase()}</p>
               
               <div className="space-y-4 border-t border-white/10 pt-8">
                 <div className="flex items-center gap-4">

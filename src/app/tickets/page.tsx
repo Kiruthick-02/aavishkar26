@@ -172,7 +172,7 @@ export default function TicketsPage() {
                 <ShieldCheck size={12} className="text-[#ea580c]" /> Flagship Event Participation is Compulsory
               </div>
               <div className="space-y-2 text-slate-400 font-sans text-sm max-w-xl mx-auto">
-                <p className="flex items-center justify-center gap-2"><Calendar size={14} className="text-[#ea580c]" /> Registration deadline: <span className="text-[#ea580c] font-semibold">11.06.26</span></p>
+                <p className="flex items-center justify-center gap-2"><Calendar size={14} className="text-[#ea580c]" /> Registration deadline: <span className="text-[#ea580c] font-semibold">11.02.26</span></p>
                 <p>Fees below are <span className="text-white font-medium">per head</span>. All 5 tech events will be held on the morning of <span className="text-[#ea580c] font-semibold">February 14th</span>.</p>
               </div>
             </header>

@@ -360,7 +360,7 @@ export default function EventsPage() {
             Explore technical and non-technical frontiers. Flagship events are mandatory for Tier 2 & 3.
           </p>
           <div className="mb-10 space-y-2 text-slate-400 font-sans text-sm max-w-2xl mx-auto">
-            <p className="flex items-center justify-center gap-2"><Calendar className="w-4 h-4 text-[#EAB308]" /> Registration deadline: <span className="text-[#EAB308] font-semibold">11.06.26</span></p>
+            <p className="flex items-center justify-center gap-2"><Calendar className="w-4 h-4 text-[#EAB308]" /> Registration deadline: <span className="text-[#EAB308] font-semibold">11.02.26</span></p>
             <p>Registration fees are <span className="text-white font-medium">per head</span>. All 5 tech events will be held on the morning of <span className="text-[#EAB308] font-semibold">February 14th</span>.</p>
           </div>
           

@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, query, where, getDocs, addDoc, doc, getDoc } from 'firebase/firestore';
-import { X, Info, Users, Phone, Zap, ArrowRight, ShieldCheck, Star, Search, Ticket, Layers, CheckCircle2, AlertCircle, Calendar, Trophy, Coins, Download } from 'lucide-react';
+import { X, Info, Users, Phone, Zap, ArrowRight, ShieldCheck, Star, Search, Ticket, Layers, CheckCircle2, AlertCircle, Calendar, Trophy, Coins, Download, Clock } from 'lucide-react';
 
 const GENERAL_CONTACTS = [
   'Kavyasri - 9360472535',
@@ -362,6 +362,65 @@ export default function EventsPage() {
           <div className="mb-10 space-y-2 text-slate-400 font-sans text-sm max-w-2xl mx-auto">
             <p className="flex items-center justify-center gap-2"><Calendar className="w-4 h-4 text-[#EAB308]" /> Registration deadline: <span className="text-[#EAB308] font-semibold">11.02.26</span></p>
             <p>Registration fees are <span className="text-white font-medium">per head</span>. All 5 tech events will be held on the morning of <span className="text-[#EAB308] font-semibold">February 14th</span>.</p>
+          </div>
+
+          <div className="max-w-4xl mx-auto rounded-[32px] bg-white/[0.03] border border-white/10 p-6 md:p-8 backdrop-blur-3xl mb-10">
+            <div className="flex items-center justify-center gap-2 text-[10px] font-mono tracking-[0.4em] uppercase text-slate-400 mb-6">
+              <Clock className="w-4 h-4 text-[#EAB308]" /> FEST_SCHEDULE
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+              <div className="rounded-3xl border border-white/10 bg-black/20 p-6">
+                <p className="text-[11px] font-black uppercase tracking-widest text-[#EAB308] mb-4">13th February 2026</p>
+                <ul className="space-y-3 text-xs text-slate-300">
+                  <li className="flex items-start justify-between gap-6">
+                    <span className="font-mono text-slate-400 whitespace-nowrap">9:00 - 9:30</span>
+                    <span className="font-semibold text-white">Registration</span>
+                  </li>
+                  <li className="flex items-start justify-between gap-6">
+                    <span className="font-mono text-slate-400 whitespace-nowrap">9:30 - 10:00</span>
+                    <span className="font-semibold text-white">Inauguration</span>
+                  </li>
+                  <li className="flex items-start justify-between gap-6">
+                    <span className="font-mono text-slate-400 whitespace-nowrap">10:00 - 12:30</span>
+                    <span className="font-semibold text-white">Workshop 1</span>
+                  </li>
+                  <li className="flex items-start justify-between gap-6">
+                    <span className="font-mono text-slate-400 whitespace-nowrap">1:30 - 5:30</span>
+                    <span className="font-semibold text-white">Workshop 2</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="rounded-3xl border border-white/10 bg-black/20 p-6">
+                <p className="text-[11px] font-black uppercase tracking-widest text-blue-400 mb-4">14th February 2026</p>
+                <ul className="space-y-3 text-xs text-slate-300">
+                  <li className="flex items-start justify-between gap-6">
+                    <span className="font-mono text-slate-400 whitespace-nowrap">9:00 - 9:30</span>
+                    <span className="font-semibold text-white">Registration</span>
+                  </li>
+                  <li className="flex items-start justify-between gap-6">
+                    <span className="font-mono text-slate-400 whitespace-nowrap">9:30 - 11:30</span>
+                    <span className="font-semibold text-white">Paper and Poster Presentation</span>
+                  </li>
+                  <li className="flex items-start justify-between gap-6">
+                    <span className="font-mono text-slate-400 whitespace-nowrap">10:30 - 11:30</span>
+                    <span className="font-semibold text-white">Reverse Engineering</span>
+                  </li>
+                  <li className="flex items-start justify-between gap-6">
+                    <span className="font-mono text-slate-400 whitespace-nowrap">11:50 - 12:40</span>
+                    <span className="font-semibold text-white">Technical Quiz</span>
+                  </li>
+                  <li className="flex items-start justify-between gap-6">
+                    <span className="font-mono text-slate-400 whitespace-nowrap">12:40 - 1:40</span>
+                    <span className="font-semibold text-white">Thesis to Technology</span>
+                  </li>
+                  <li className="flex items-start justify-between gap-6">
+                    <span className="font-mono text-slate-400 whitespace-nowrap">2:30 - 4:30</span>
+                    <span className="font-semibold text-white">Valedictory and Certificate Distribution</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
           
           <motion.button

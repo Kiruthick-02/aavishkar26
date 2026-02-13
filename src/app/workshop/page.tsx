@@ -340,10 +340,10 @@ export default function WorkshopPage() {
                 <Clock className="w-10 h-10 text-[#EAB308]" />
               </div>
               <h2 className="text-2xl font-bold font-display text-white uppercase tracking-tight mb-2">
-                Coming Soon
+                Closed
               </h2>
               <p className="text-slate-400 font-sans mb-6">
-                Registrations are temporarily closed. Check back soon.
+                Registrations are closed. On-spot registration is only available for events on February 13. There is no on-spot registration for events on February 14.
               </p>
             </motion.div>
           ) : (

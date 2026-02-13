@@ -161,8 +161,8 @@ export default function TicketsPage() {
             <div className="w-24 h-24 rounded-full bg-[#ea580c]/10 flex items-center justify-center mx-auto mb-8 border border-[#ea580c]/20">
               <Clock size={48} className="text-[#ea580c]" />
             </div>
-            <h1 className="text-4xl font-black uppercase mb-4 italic">Coming <span className="text-[#ea580c]">Soon</span></h1>
-            <p className="text-slate-400 font-sans mb-8 max-w-md mx-auto">Registrations are temporarily closed. Check back later.</p>
+            <h1 className="text-4xl font-black uppercase mb-4 italic">Closed <span className="text-[#ea580c]">...</span></h1>
+            <p className="text-slate-400 font-sans mb-8 max-w-md mx-auto">Registrations are closed. On-spot registration is only available for events on February 13. There is no on-spot registration for events on February 14.</p>
           </div>
         ) : (
           <>

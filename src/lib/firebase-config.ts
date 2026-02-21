@@ -11,12 +11,12 @@ const getEnv = (key: string, fallback: string) => {
 };
 
 const firebaseConfig: FirebaseOptions = {
-  apiKey: getEnv('NEXT_PUBLIC_FIREBASE_API_KEY', "AIzaSyDu10wzc8fvP0nrVAW_f_GpUdsTZm5ponA"),
-  authDomain: getEnv('NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN', "aavishkar-79254.firebaseapp.com"),
-  projectId: getEnv('NEXT_PUBLIC_FIREBASE_PROJECT_ID', "aavishkar-79254"),
-  storageBucket: getEnv('NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET', "aavishkar-79254.firebasestorage.app"),
-  messagingSenderId: getEnv('NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID', "31535047412"),
-  appId: getEnv('NEXT_PUBLIC_FIREBASE_APP_ID', "1:31535047412:web:8c03bca1d6c706d047b4a1")
+  apiKey: getEnv('NEXT_PUBLIC_FIREBASE_API_KEY', ""),
+  authDomain: getEnv('NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN', ""),
+  projectId: getEnv('NEXT_PUBLIC_FIREBASE_PROJECT_ID', ""),
+  storageBucket: getEnv('NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET', ""),
+  messagingSenderId: getEnv('NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID', ""),
+  appId: getEnv('NEXT_PUBLIC_FIREBASE_APP_ID', "")
 };
 
 let appInstance: any = null;
